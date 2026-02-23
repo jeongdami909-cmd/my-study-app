@@ -3,78 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Knowledge Vault</title>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Aqua Knowledge Vault</title>
     <style>
         :root {
-            --silver-bg: #f5f5f7;
-            --silver-gradient: linear-gradient(145deg, #e6e6e6, #ffffff);
-            --accent-silver: #8e8e93;
-            --text-main: #1d1d1f;
-            --glass-effect: rgba(255, 255, 255, 0.7);
+            --aqua-bg: #f0f7f9;
+            --aqua-main: #e0f2f7;
+            --aqua-accent: #7fb3d5;
+            --silver-text: #5d6d7e;
+            --glass: rgba(255, 255, 255, 0.6);
         }
 
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background-color: var(--silver-bg); 
-            color: var(--text-main);
-            margin: 0; padding: 0;
-            display: flex; flex-direction: column; align-items: center;
+            background: var(--aqua-bg);
+            background-image: radial-gradient(at 0% 0%, hsla(197,71%,92%,1) 0, transparent 50%), 
+                              radial-gradient(at 50% 0%, hsla(187,52%,90%,1) 0, transparent 50%);
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            margin: 0; color: var(--silver-text);
+            min-height: 100vh;
         }
 
-        /* 큰 메뉴 섹션 */
+        /* 투명한 상단 바 */
         nav {
-            width: 100%; background: var(--glass-effect);
-            backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
-            border-bottom: 1px solid #d1d1d6; padding: 10px 0;
-            display: flex; justify-content: center; gap: 15px; overflow-x: auto;
+            position: sticky; top: 0; z-index: 100;
+            background: var(--glass); backdrop-filter: blur(15px);
+            display: flex; gap: 10px; padding: 15px;
+            overflow-x: auto; border-bottom: 1px solid rgba(255,255,255,0.3);
         }
         nav button {
-            background: none; border: none; font-size: 0.9em; font-weight: 600;
-            color: var(--accent-silver); cursor: pointer; white-space: nowrap;
-            padding: 5px 10px; transition: 0.3s;
+            background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.5);
+            padding: 8px 16px; border-radius: 20px; color: var(--silver-text);
+            font-weight: 500; cursor: pointer; transition: 0.3s; white-space: nowrap;
         }
-        nav button.active { color: var(--text-main); border-bottom: 2px solid var(--text-main); }
+        nav button.active { background: var(--aqua-accent); color: white; border-color: var(--aqua-accent); }
 
-        .container { width: 90%; max-width: 600px; margin-top: 20px; }
+        .container { width: 92%; max-width: 500px; margin: 20px auto; }
 
-        /* 입력창 스타일 */
+        /* 입력창 디자인 - 유리 느낌 */
         .editor-card {
-            background: var(--silver-gradient); border-radius: 15px;
-            padding: 20px; box-shadow: 5px 5px 15px #d1d1d6, -5px -5px 15px #ffffff;
+            background: var(--glass); backdrop-filter: blur(10px);
+            border-radius: 24px; padding: 25px;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
             margin-bottom: 30px;
         }
-        input, textarea {
-            width: 100%; border: 1px solid #d1d1d6; border-radius: 8px;
-            background: rgba(255,255,255,0.5); padding: 12px; margin-bottom: 10px;
-            box-sizing: border-box; font-size: 1em;
+        textarea, input {
+            width: 100%; background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.4); border-radius: 12px;
+            padding: 15px; margin-bottom: 12px; box-sizing: border-box;
+            outline: none; transition: 0.3s; color: #444;
         }
-        textarea { height: 150px; resize: none; }
-        
-        .btn-group { display: flex; gap: 10px; }
-        button.main-btn {
-            flex: 1; padding: 12px; border: none; border-radius: 8px;
-            background: var(--text-main); color: white; font-weight: bold; cursor: pointer;
+        textarea:focus { background: white; border-color: var(--aqua-accent); }
+        .main-btn {
+            width: 100%; padding: 15px; border: none; border-radius: 12px;
+            background: var(--aqua-accent); color: white; font-weight: 600;
+            box-shadow: 0 4px 15px rgba(127, 179, 213, 0.3); cursor: pointer;
         }
 
-        /* 게시판 스타일 */
+        /* 게시글 카드 */
         .post-card {
-            background: white; border-radius: 12px; padding: 15px;
-            margin-bottom: 15px; border: 1px solid #e5e5ea;
+            background: white; border-radius: 20px; padding: 20px;
+            margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
-        .post-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .post-category { font-size: 0.75em; color: var(--accent-silver); font-weight: bold; text-transform: uppercase; }
-        .post-controls { display: flex; gap: 8px; }
-        .control-btn { font-size: 0.75em; background: none; border: 1px solid #d1d1d6; border-radius: 4px; padding: 2px 6px; cursor: pointer; color: #666; }
+        .post-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .post-category { font-size: 0.75em; color: var(--aqua-accent); font-weight: bold; }
+        .control-btn { font-size: 0.7em; background: #f0f0f0; border: none; padding: 4px 10px; border-radius: 6px; color: #999; cursor: pointer; }
         
-        .post-content { line-height: 1.6; white-space: pre-wrap; word-break: break-all; }
-        .post-link { display: block; margin-top: 10px; font-size: 0.85em; color: #007aff; text-decoration: none; }
-        .post-date { font-size: 0.7em; color: #aeaeb2; margin-top: 10px; }
+        .post-content { line-height: 1.7; font-size: 0.95em; color: #444; }
+        .post-link { display: block; margin-top: 12px; font-size: 0.8em; color: var(--aqua-accent); text-decoration: none; }
+        .post-date { font-size: 0.7em; color: #bdc3c7; margin-top: 15px; }
     </style>
 </head>
 <body>
-
     <nav id="menuNav">
         <button onclick="setCategory('의학')" id="menu-의학">의학</button>
         <button onclick="setCategory('시사')" id="menu-시사">시사</button>
@@ -86,17 +86,15 @@
 
     <div class="container">
         <div class="editor-card">
-            <input type="text" id="postLink" placeholder="사진 또는 관련 링크 (선택사항)">
-            <textarea id="postContent" placeholder="긴 글도 마음껏 기록하세요..."></textarea>
-            <div class="btn-group">
-                <button class="main-btn" onclick="savePost()">기록하기</button>
-            </div>
+            <input type="text" id="postLink" placeholder="🔗 사진 또는 참고 링크">
+            <textarea id="postContent" placeholder="기록하고 싶은 내용을 적어주세요..."></textarea>
+            <button class="main-btn" onclick="savePost()">기록 저장하기</button>
         </div>
-
         <div id="board"></div>
     </div>
 
     <script>
+        // (이전 게시판 저장/삭제 로직 동일하게 포함됨)
         let currentCategory = '전체';
         let editIndex = -1;
 
@@ -111,73 +109,41 @@
             const content = document.getElementById('postContent').value;
             const link = document.getElementById('postLink').value;
             if(!content) return;
-
-            const posts = JSON.parse(localStorage.getItem('vaultPosts') || '[]');
-            
-            const newPost = {
-                category: currentCategory === '전체' ? '기타' : currentCategory,
-                content: content,
-                link: link,
-                date: new Date().toLocaleString()
-            };
-
-            if(editIndex > -1) {
-                posts[editIndex] = newPost;
-                editIndex = -1;
-            } else {
-                posts.unshift(newPost);
-            }
-
-            localStorage.setItem('vaultPosts', JSON.stringify(posts));
+            const posts = JSON.parse(localStorage.getItem('aquaVaultPosts') || '[]');
+            const newPost = { category: currentCategory === '전체' ? '기타' : currentCategory, content, link, date: new Date().toLocaleString() };
+            if(editIndex > -1) { posts[editIndex] = newPost; editIndex = -1; } 
+            else { posts.unshift(newPost); }
+            localStorage.setItem('aquaVaultPosts', JSON.stringify(posts));
             document.getElementById('postContent').value = '';
             document.getElementById('postLink').value = '';
             renderPosts();
         }
 
         function deletePost(index) {
-            if(confirm("정말 삭제할까요?")) {
-                const posts = JSON.parse(localStorage.getItem('vaultPosts') || '[]');
+            if(confirm("삭제할까요?")) {
+                const posts = JSON.parse(localStorage.getItem('aquaVaultPosts') || '[]');
                 posts.splice(index, 1);
-                localStorage.setItem('vaultPosts', JSON.stringify(posts));
+                localStorage.setItem('aquaVaultPosts', JSON.stringify(posts));
                 renderPosts();
             }
         }
 
-        function editPost(index) {
-            const posts = JSON.parse(localStorage.getItem('vaultPosts') || '[]');
-            const post = posts[index];
-            document.getElementById('postContent').value = post.content;
-            document.getElementById('postLink').value = post.link;
-            editIndex = index;
-            window.scrollTo(0,0);
-        }
-
         function renderPosts() {
-            const board = document.getElementById('board');
-            board.innerHTML = '';
-            const posts = JSON.parse(localStorage.getItem('vaultPosts') || '[]');
-            
+            const board = document.getElementById('board'); board.innerHTML = '';
+            const posts = JSON.parse(localStorage.getItem('aquaVaultPosts') || '[]');
             posts.forEach((p, index) => {
                 if(currentCategory !== '전체' && p.category !== currentCategory) return;
-
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.innerHTML = `
-                    <div class="post-header">
-                        <span class="post-category">${p.category}</span>
-                        <div class="post-controls">
-                            <button class="control-btn" onclick="editPost(${index})">수정</button>
-                            <button class="control-btn" onclick="deletePost(${index})">삭제</button>
-                        </div>
-                    </div>
+                    <div class="post-header"><span class="post-category">${p.category}</span>
+                    <div><button class="control-btn" onclick="deletePost(${index})">삭제</button></div></div>
                     <div class="post-content">${p.content}</div>
-                    ${p.link ? `<a href="${p.link}" target="_blank" class="post-link">🔗 관련 링크/사진 보기</a>` : ''}
-                    <div class="post-date">${p.date}</div>
-                `;
+                    ${p.link ? `<a href="${p.link}" target="_blank" class="post-link">📍 참고 링크</a>` : ''}
+                    <div class="post-date">${p.date}</div>`;
                 board.appendChild(card);
             });
         }
-
         renderPosts();
     </script>
 </body>
