@@ -3,63 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Knowledge Vault Final</title>
+    <title>Knowledge Vault Master</title>
     <style>
         :root {
-            --bg-sand: #fdfaf8;
+            --bg-sand: #f8f6f4;
             --point-orange: #e67e22;
             --text-dark: #2c3e50;
+            --glass: rgba(255, 255, 255, 0.8);
         }
 
         body { background-color: var(--bg-sand); font-family: sans-serif; margin: 0; color: var(--text-dark); }
 
-        /* 1. 구글 검색바 */
-        .google-search { width: 90%; max-width: 500px; margin: 20px auto; display: flex; background: white; border-radius: 50px; padding: 5px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .google-search input { flex: 1; border: none; padding: 10px; outline: none; font-size: 1rem; }
+        /* 1. 상단 배경 사진 영역 (사용자가 직접 업로드/변경 가능) */
+        .top-hero {
+            width: 100%; height: 250px; background-color: #ddd;
+            background-size: cover; background-position: center;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        .hero-overlay {
+            position: absolute; bottom: 10px; right: 10px;
+            background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 5px;
+            color: white; font-size: 0.7rem; cursor: pointer;
+        }
 
-        .container { width: 92%; max-width: 550px; margin: 0 auto; padding-bottom: 50px; }
+        /* 2. 검색 및 네비게이션 */
+        .search-area { width: 90%; max-width: 600px; margin: -30px auto 20px; z-index: 10; position: relative; }
+        .google-search { display: flex; background: white; border-radius: 50px; padding: 10px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .google-search input { flex: 1; border: none; outline: none; font-size: 1rem; }
 
-        nav { display: flex; justify-content: center; gap: 8px; padding: 10px; overflow-x: auto; }
-        nav button { background: white; border: 1px solid #ddd; padding: 6px 12px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-size: 0.8rem; }
+        nav { display: flex; justify-content: center; gap: 8px; padding: 15px; overflow-x: auto; }
+        nav button { background: white; border: 1px solid #eee; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; }
         nav button.active { background: var(--point-orange); color: white; border-color: var(--point-orange); }
 
-        /* 입력 영역 */
-        .editor-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-top: 10px; }
-        .editor-card input, .editor-card textarea { width: 100%; border: 1px solid #eee; border-radius: 8px; padding: 12px; margin-bottom: 10px; box-sizing: border-box; font-size: 1rem; }
-        
-        .file-label { display: block; background: #fff7f2; border: 2px dashed var(--point-orange); padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 10px; cursor: pointer; color: var(--point-orange); font-weight: bold; }
-        #fileInput { display: none; }
+        .container { width: 92%; max-width: 650px; margin: 0 auto; padding-bottom: 50px; }
 
-        .main-btn { width: 100%; padding: 15px; border: none; border-radius: 8px; background: var(--point-orange); color: white; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+        /* 3. 기록 입력란 */
+        .editor-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .editor-card input, .editor-card textarea { width: 100%; border: 1px solid #f0f0f0; border-radius: 12px; padding: 15px; margin-bottom: 12px; box-sizing: border-box; background: #fafafa; font-size: 1rem; }
+        .file-box { border: 2px dashed #ddd; padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 15px; cursor: pointer; color: var(--point-orange); font-weight: bold; }
 
-        /* 게시글 카드 */
-        .post-card { background: white; border-radius: 20px; margin-top: 30px; overflow: hidden; border: 1px solid #eee; box-shadow: 0 10px 20px rgba(0,0,0,0.05); position: relative; }
-        
-        /* 게시글 상단 사진 영역 */
-        .post-img-container { width: 100%; height: 300px; position: relative; background: #f0f0f0; }
-        .post-img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* 사진 위 수정/삭제 버튼 - 아주 잘 보이게 함 */
-        .post-controls { position: absolute; top: 15px; right: 15px; display: flex; gap: 10px; z-index: 10; }
-        .btn-ctrl { background: rgba(0,0,0,0.7); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: 0.2s; }
-        .btn-ctrl:hover { background: var(--point-orange); border-color: white; }
+        .main-btn { width: 100%; padding: 18px; border: none; border-radius: 12px; background: var(--point-orange); color: white; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
 
-        .post-body { padding: 25px; }
-        .post-info { font-size: 0.8rem; color: var(--point-orange); margin-bottom: 8px; font-weight: bold; display: flex; justify-content: space-between; }
-        .post-title { font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; color: #222; }
-        .post-content { line-height: 1.8; font-size: 1rem; color: #444; white-space: pre-wrap; }
+        /* 4. 게시판 리스트 (사진 작게, 글 크게) */
+        .post-card { background: white; border-radius: 20px; margin-bottom: 20px; padding: 20px; display: flex; gap: 20px; position: relative; border: 1px solid #eee; transition: 0.3s; }
+        .post-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+
+        /* 작은 사진 링크 (썸네일) */
+        .post-thumb { width: 100px; height: 100px; border-radius: 12px; object-fit: cover; background: #f0f0f0; flex-shrink: 0; cursor: pointer; }
+
+        /* 큰 글 게시판 내용 */
+        .post-content-area { flex: 1; }
+        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .post-category { font-size: 0.75rem; font-weight: bold; color: var(--point-orange); text-transform: uppercase; }
+        .post-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 10px; color: #222; }
+        .post-text { line-height: 1.7; font-size: 0.95rem; color: #555; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .post-date { font-size: 0.75rem; color: #bbb; margin-top: 10px; }
+
+        /* 수정/삭제 버튼 (게시판 상단 배치) */
+        .post-actions { position: absolute; top: 15px; right: 20px; display: flex; gap: 8px; }
+        .action-btn { background: #f8f8f8; border: 1px solid #eee; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; color: #888; }
+        .action-btn:hover { background: var(--point-orange); color: white; }
     </style>
 </head>
 <body>
 
-    <div class="google-search">
-        <form action="https://www.google.com/search" method="GET" target="_blank" style="width:100%; display:flex;">
-            <input type="text" name="q" placeholder="Google 지식 검색...">
-            <button type="submit" style="background:none; border:none; cursor:pointer; font-size: 1.2rem;">🔍</button>
-        </form>
+    <div class="top-hero" id="topHero" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80');">
+        <label class="hero-overlay">
+            📷 배경 사진 변경
+            <input type="file" id="heroInput" hidden accept="image/*">
+        </label>
+        <h1 style="color:white; text-shadow: 0 2px 10px rgba(0,0,0,0.3); letter-spacing: 5px;">VAULT</h1>
     </div>
 
-    <nav id="menuNav">
+    <div class="search-area">
+        <div class="google-search">
+            <form action="https://www.google.com/search" method="GET" target="_blank" style="width:100%; display:flex;">
+                <input type="text" name="q" placeholder="구글 지식 검색 시작...">
+                <button type="submit" style="background:none; border:none; cursor:pointer; font-size:1.2rem;">🔍</button>
+            </form>
+        </div>
+    </div>
+
+    <nav>
         <button onclick="setCategory('의학')" id="menu-의학">의학</button>
         <button onclick="setCategory('시사')" id="menu-시사">시사</button>
         <button onclick="setCategory('과학')" id="menu-과학">과학</button>
@@ -70,31 +96,42 @@
 
     <div class="container">
         <div class="editor-card">
-            <h3 style="margin-top:0; color:var(--point-orange);">새 지식 기록하기</h3>
-            <input type="text" id="postTitle" placeholder="제목">
-            <label class="file-label" for="fileInput">📸 여기에 사진을 올려주세요</label>
-            <input type="file" id="fileInput" accept="image/*">
-            <textarea id="postContent" placeholder="내용을 입력하세요..." rows="5"></textarea>
-            <button class="main-btn" onclick="savePost()">기록 저장하기</button>
+            <input type="text" id="postTitle" placeholder="오늘의 핵심 제목">
+            <div class="file-box" onclick="document.getElementById('postFileInput').click()">
+                🖼️ 참고 사진 첨부 (작게 표시됨)
+            </div>
+            <input type="file" id="postFileInput" hidden accept="image/*">
+            <textarea id="postContent" placeholder="긴 글 내용을 마음껏 기록하세요..." rows="6"></textarea>
+            <button class="main-btn" onclick="savePost()">지식 창고에 저장하기</button>
         </div>
+
         <div id="board"></div>
     </div>
 
     <script>
         let currentCategory = '전체';
-        let selectedImgData = "";
+        let selectedPostImg = "";
         let editIndex = -1;
 
-        // 사진 파일 읽기
-        document.getElementById('fileInput').addEventListener('change', function(e) {
+        // 상단 배경 변경
+        document.getElementById('heroInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
-            if (file) {
+            if(file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    selectedImgData = event.target.result;
-                    document.querySelector('.file-label').innerHTML = "✅ 사진 선택 완료";
-                    document.querySelector('.file-label').style.background = "#e67e2222";
+                reader.onload = (ev) => {
+                    document.getElementById('topHero').style.backgroundImage = `url(${ev.target.result})`;
+                    localStorage.setItem('heroImg', ev.target.result);
                 };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 게시글 사진 첨부
+        document.getElementById('postFileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => { selectedPostImg = ev.target.result; alert("사진이 준비되었습니다."); };
                 reader.readAsDataURL(file);
             }
         });
@@ -109,15 +146,15 @@
         function savePost() {
             const title = document.getElementById('postTitle').value;
             const content = document.getElementById('postContent').value;
-            if(!title || !content) { alert("제목과 내용을 입력해주세요!"); return; }
+            if(!title || !content) return;
 
-            const posts = JSON.parse(localStorage.getItem('vaultVFinal') || '[]');
-            const postData = { category: currentCategory, title, content, img: selectedImgData, date: new Date().toLocaleString() };
+            const posts = JSON.parse(localStorage.getItem('vaultFinalV5') || '[]');
+            const data = { category: currentCategory, title, content, img: selectedPostImg, date: new Date().toLocaleDateString() };
 
-            if(editIndex > -1) { posts[editIndex] = postData; editIndex = -1; } 
-            else { posts.unshift(postData); }
+            if(editIndex > -1) { posts[editIndex] = data; editIndex = -1; }
+            else { posts.unshift(data); }
 
-            localStorage.setItem('vaultVFinal', JSON.stringify(posts));
+            localStorage.setItem('vaultFinalV5', JSON.stringify(posts));
             resetForm();
             renderPosts();
         }
@@ -125,56 +162,56 @@
         function resetForm() {
             document.getElementById('postTitle').value = '';
             document.getElementById('postContent').value = '';
-            document.getElementById('fileInput').value = '';
-            selectedImgData = "";
-            document.querySelector('.file-label').innerHTML = "📸 여기에 사진을 올려주세요";
-            document.querySelector('.file-label').style.background = "#fff7f2";
+            selectedPostImg = "";
         }
 
         function deletePost(index) {
-            if(confirm("이 소중한 기록을 삭제하시겠습니까?")) {
-                const posts = JSON.parse(localStorage.getItem('vaultVFinal') || '[]');
+            if(confirm("기록을 삭제하시겠습니까?")) {
+                const posts = JSON.parse(localStorage.getItem('vaultFinalV5') || '[]');
                 posts.splice(index, 1);
-                localStorage.setItem('vaultVFinal', JSON.stringify(posts));
+                localStorage.setItem('vaultFinalV5', JSON.stringify(posts));
                 renderPosts();
             }
         }
 
         function editPost(index) {
-            const posts = JSON.parse(localStorage.getItem('vaultVFinal') || '[]');
+            const posts = JSON.parse(localStorage.getItem('vaultFinalV5') || '[]');
             const p = posts[index];
             document.getElementById('postTitle').value = p.title;
             document.getElementById('postContent').value = p.content;
-            selectedImgData = p.img;
+            selectedPostImg = p.img;
             editIndex = index;
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            document.querySelector('.file-label').innerHTML = p.img ? "✅ 기존 사진 있음 (클릭 시 교체)" : "📸 사진 추가하기";
+            window.scrollTo({top: 400, behavior: 'smooth'});
         }
 
         function renderPosts() {
             const board = document.getElementById('board'); board.innerHTML = '';
-            const posts = JSON.parse(localStorage.getItem('vaultVFinal') || '[]');
+            const posts = JSON.parse(localStorage.getItem('vaultFinalV5') || '[]');
             
             posts.forEach((p, index) => {
                 if(currentCategory !== '전체' && p.category !== currentCategory) return;
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.innerHTML = `
-                    <div class="post-img-container">
-                        ${p.img ? `<img src="${p.img}" class="post-img">` : `<div style="padding:100px; text-align:center; color:#ccc;">사진 없음</div>`}
-                        <div class="post-controls">
-                            <button class="btn-ctrl" onclick="editPost(${index})">수정</button>
-                            <button class="btn-ctrl" onclick="deletePost(${index})">삭제</button>
-                        </div>
+                    <div class="post-actions">
+                        <button class="action-btn" onclick="editPost(${index})">수정</button>
+                        <button class="action-btn" onclick="deletePost(${index})">삭제</button>
                     </div>
-                    <div class="post-body">
-                        <div class="post-info"><span>#${p.category}</span><span>${p.date}</span></div>
+                    ${p.img ? `<img src="${p.img}" class="post-thumb" onclick="window.open(this.src)">` : `<div class="post-thumb" style="display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#ccc;border:1px solid #eee;">NO IMG</div>`}
+                    <div class="post-content-area">
+                        <div class="post-header"><span class="post-category">#${p.category}</span></div>
                         <div class="post-title">${p.title}</div>
-                        <div class="post-content">${p.content}</div>
-                    </div>`;
+                        <div class="post-text">${p.content}</div>
+                        <div class="post-date">${p.date}</div>
+                    </div>
+                `;
                 board.appendChild(card);
             });
         }
+        
+        // 배경사진 복구
+        const savedHero = localStorage.getItem('heroImg');
+        if(savedHero) document.getElementById('topHero').style.backgroundImage = `url(${savedHero})`;
         renderPosts();
     </script>
 </body>
