@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimal Orange Vault</title>
+    <title>Knowledge Vault</title>
     <style>
         :root {
-            --bg-color: #f7f3f0; /* 매우 연한 베이지/오렌지 바탕 */
+            --bg-color: #f8f5f2;
             --card-bg: #ffffff;
-            --point-orange: #f2a172; /* 은은한 오렌지 포인트 */
+            --point-orange: #f2a172;
             --soft-orange: #fdf2eb;
-            --text-dark: #4a4a4a;
-            --text-light: #9a9a9a;
+            --text-dark: #3a3a3a;
+            --text-muted: #8e8e93;
         }
 
         body { 
@@ -21,63 +21,90 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* 상단 메뉴 - 미니멀 스타일 */
+        /* 사이트 제목 */
+        header {
+            text-align: center; padding: 40px 20px 10px;
+        }
+        header h1 {
+            font-size: 1.5rem; font-weight: 300; letter-spacing: 2px;
+            color: var(--point-orange); margin: 0;
+        }
+
+        /* 상단 메뉴 */
         nav {
-            display: flex; justify-content: center; gap: 10px;
-            padding: 20px; background: var(--bg-color);
-            position: sticky; top: 0; z-index: 10;
+            display: flex; justify-content: center; gap: 8px;
+            padding: 20px; position: sticky; top: 0; z-index: 10;
+            background: var(--bg-color);
         }
         nav button {
             background: white; border: 1px solid #eee;
-            padding: 8px 18px; border-radius: 50px;
-            font-size: 0.85em; color: var(--text-dark);
+            padding: 7px 15px; border-radius: 50px;
+            font-size: 0.8rem; color: var(--text-dark);
             cursor: pointer; transition: 0.2s;
         }
         nav button.active {
             background: var(--point-orange);
             color: white; border-color: var(--point-orange);
-            box-shadow: 0 4px 10px rgba(242, 161, 114, 0.3);
         }
 
-        .container { width: 90%; max-width: 500px; margin: 0 auto; }
+        .container { width: 92%; max-width: 500px; margin: 0 auto; padding-bottom: 50px; }
 
-        /* 입력창 - 그림자 없는 미니멀 스타일 */
+        /* 입력창 영역 */
         .editor-card {
-            background: var(--card-bg); border-radius: 16px;
-            padding: 20px; border: 1px solid #efefef;
-            margin-bottom: 30px;
+            background: var(--card-bg); border-radius: 20px;
+            padding: 24px; border: 1px solid #eee;
+            margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);
         }
         input, textarea {
-            width: 100%; border: 1px solid #f0f0f0; border-radius: 10px;
-            padding: 12px; margin-bottom: 10px; box-sizing: border-box;
-            background: #fafafa; font-size: 0.95em; outline: none;
+            width: 100%; border: 1px solid #f0f0f0; border-radius: 12px;
+            padding: 14px; margin-bottom: 12px; box-sizing: border-box;
+            background: #fafafa; font-size: 0.95rem; outline: none;
         }
+        input:focus, textarea:focus { border-color: var(--point-orange); background: white; }
+        
         .main-btn {
-            width: 100%; padding: 14px; border: none; border-radius: 10px;
+            width: 100%; padding: 16px; border: none; border-radius: 12px;
             background: var(--point-orange); color: white;
-            font-weight: 600; cursor: pointer;
+            font-weight: 600; cursor: pointer; font-size: 1rem;
         }
 
-        /* 게시글 카드 - 미니멀리즘 강조 */
+        /* 게시글 카드 */
         .post-card {
-            background: var(--card-bg); border-radius: 16px;
-            padding: 20px; margin-bottom: 16px;
-            border: 1px solid #efefef;
-            transition: transform 0.2s;
+            background: var(--card-bg); border-radius: 20px;
+            padding: 24px; margin-bottom: 20px;
+            border: 1px solid #eee;
         }
-        .post-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
-        .post-category { 
-            font-size: 0.7em; font-weight: bold; color: var(--point-orange);
-            background: var(--soft-orange); padding: 4px 10px; border-radius: 20px;
+        .post-top {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 15px; border-bottom: 1px solid #f9f9f9; padding-bottom: 10px;
         }
-        .control-btn { font-size: 0.7em; color: var(--text-light); background: none; border: none; cursor: pointer; }
+        .post-date-info { font-size: 0.75rem; color: var(--text-muted); }
+        .post-category-tag { 
+            font-size: 0.7rem; font-weight: bold; color: var(--point-orange);
+            background: var(--soft-orange); padding: 3px 8px; border-radius: 5px;
+        }
         
-        .post-content { line-height: 1.6; font-size: 0.95em; color: #555; }
-        .post-link { display: block; margin-top: 10px; font-size: 0.8em; color: #a18a7d; text-decoration: none; }
-        .post-date { font-size: 0.7em; color: #ccc; margin-top: 15px; }
+        .post-title { 
+            font-size: 1.15rem; font-weight: 600; margin-bottom: 12px; 
+            color: #222; line-height: 1.4;
+        }
+        .post-content { line-height: 1.7; font-size: 0.95rem; color: #4a4a4a; }
+        
+        .post-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 20px; padding-top: 15px; border-top: 1px solid #f9f9f9;
+        }
+        .post-link { font-size: 0.8rem; color: var(--point-orange); text-decoration: none; }
+        .del-btn { font-size: 0.75rem; color: #ffcccc; background: none; border: none; cursor: pointer; }
+        .del-btn:hover { color: #ff5e5e; }
     </style>
 </head>
 <body>
+
+    <header>
+        <h1>KNOWLEDGE VAULT</h1>
+    </header>
+
     <nav id="menuNav">
         <button onclick="setCategory('의학')" id="menu-의학">의학</button>
         <button onclick="setCategory('시사')" id="menu-시사">시사</button>
@@ -89,8 +116,9 @@
 
     <div class="container">
         <div class="editor-card">
-            <input type="text" id="postLink" placeholder="🔗 사진/링크 주소">
-            <textarea id="postContent" placeholder="기록하고 싶은 내용을 작성하세요."></textarea>
+            <input type="text" id="postTitle" placeholder="글 제목을 입력하세요">
+            <input type="text" id="postLink" placeholder="🔗 관련 사진/링크 (선택)">
+            <textarea id="postContent" placeholder="여기에 긴 내용을 기록하세요."></textarea>
             <button class="main-btn" onclick="savePost()">기록하기</button>
         </div>
         <div id="board"></div>
@@ -107,26 +135,30 @@
         }
 
         function savePost() {
+            const title = document.getElementById('postTitle').value;
             const content = document.getElementById('postContent').value;
             const link = document.getElementById('postLink').value;
-            if(!content) return;
+            if(!title || !content) { alert("제목과 내용을 입력해주세요!"); return; }
 
-            const posts = JSON.parse(localStorage.getItem('orangeVaultPosts') || '[]');
+            const posts = JSON.parse(localStorage.getItem('finalVaultPosts') || '[]');
             posts.unshift({
                 category: currentCategory === '전체' ? '기타' : currentCategory,
-                content, link, date: new Date().toLocaleString()
+                title, content, link, date: new Date().toLocaleString()
             });
-            localStorage.setItem('orangeVaultPosts', JSON.stringify(posts));
+            localStorage.setItem('finalVaultPosts', JSON.stringify(posts));
+            
+            // 초기화
+            document.getElementById('postTitle').value = '';
             document.getElementById('postContent').value = '';
             document.getElementById('postLink').value = '';
             renderPosts();
         }
 
         function deletePost(index) {
-            if(confirm("기록을 삭제하시겠습니까?")) {
-                const posts = JSON.parse(localStorage.getItem('orangeVaultPosts') || '[]');
+            if(confirm("이 기록을 삭제하시겠습니까?")) {
+                const posts = JSON.parse(localStorage.getItem('finalVaultPosts') || '[]');
                 posts.splice(index, 1);
-                localStorage.setItem('orangeVaultPosts', JSON.stringify(posts));
+                localStorage.setItem('finalVaultPosts', JSON.stringify(posts));
                 renderPosts();
             }
         }
@@ -134,19 +166,23 @@
         function renderPosts() {
             const board = document.getElementById('board');
             board.innerHTML = '';
-            const posts = JSON.parse(localStorage.getItem('orangeVaultPosts') || '[]');
+            const posts = JSON.parse(localStorage.getItem('finalVaultPosts') || '[]');
+            
             posts.forEach((p, index) => {
                 if(currentCategory !== '전체' && p.category !== currentCategory) return;
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.innerHTML = `
-                    <div class="post-header">
-                        <span class="post-category">${p.category}</span>
-                        <button class="control-btn" onclick="deletePost(${index})">삭제</button>
+                    <div class="post-top">
+                        <span class="post-category-tag">${p.category}</span>
+                        <span class="post-date-info">${p.date}</span>
                     </div>
+                    <div class="post-title">${p.title}</div>
                     <div class="post-content">${p.content}</div>
-                    ${p.link ? `<a href="${p.link}" target="_blank" class="post-link">📍 관련 자료 확인</a>` : ''}
-                    <div class="post-date">${p.date}</div>`;
+                    <div class="post-footer">
+                        ${p.link ? `<a href="${p.link}" target="_blank" class="post-link">📍 관련 자료 보기</a>` : '<span></span>'}
+                        <button class="del-btn" onclick="deletePost(${index})">삭제</button>
+                    </div>`;
                 board.appendChild(card);
             });
         }
