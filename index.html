@@ -3,109 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Knowledge Vault</title>
+    <title>Knowledge Vault v3</title>
     <style>
         :root {
-            --bg-color: #f8f5f2;
-            --card-bg: #ffffff;
-            --point-orange: #f2a172;
-            --soft-orange: #fdf2eb;
-            --text-dark: #3a3a3a;
-            --text-muted: #8e8e93;
+            --bg-color: #fdfaf8; /* 부드러운 샌드 베이지 */
+            --point-orange: #e67e22; /* 세련된 오렌지 */
+            --card-white: rgba(255, 255, 255, 0.95);
+            --text-dark: #2c3e50;
         }
 
         body { 
-            background-color: var(--bg-color);
-            font-family: 'Pretendard', -apple-system, sans-serif;
-            margin: 0; color: var(--text-dark);
-            -webkit-font-smoothing: antialiased;
+            background-color: var(--bg-color); font-family: sans-serif; margin: 0; color: var(--text-dark);
         }
 
-        /* 사이트 제목 */
-        header {
-            text-align: center; padding: 40px 20px 10px;
+        /* 1. 상단 헤드 섹션 (사진 배경 영역) */
+        .hero-section {
+            width: 100%; height: 200px; 
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?auto=format&fit=crop&w=800&q=80');
+            background-size: cover; background-position: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; text-align: center;
         }
-        header h1 {
-            font-size: 1.5rem; font-weight: 300; letter-spacing: 2px;
-            color: var(--point-orange); margin: 0;
-        }
+        .hero-section h1 { font-size: 1.8rem; letter-spacing: 3px; margin-bottom: 10px; }
 
-        /* 상단 메뉴 */
-        nav {
-            display: flex; justify-content: center; gap: 8px;
-            padding: 20px; position: sticky; top: 0; z-index: 10;
-            background: var(--bg-color);
+        /* 2. 구글 검색창 */
+        .google-search-container {
+            width: 90%; max-width: 500px; margin: -25px auto 20px;
         }
-        nav button {
-            background: white; border: 1px solid #eee;
-            padding: 7px 15px; border-radius: 50px;
-            font-size: 0.8rem; color: var(--text-dark);
-            cursor: pointer; transition: 0.2s;
+        .google-search-container form {
+            display: flex; background: white; border-radius: 50px; 
+            padding: 5px 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        nav button.active {
-            background: var(--point-orange);
-            color: white; border-color: var(--point-orange);
+        .google-search-container input {
+            flex: 1; border: none; padding: 10px; outline: none; border-radius: 50px;
         }
+        .search-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; }
 
         .container { width: 92%; max-width: 500px; margin: 0 auto; padding-bottom: 50px; }
 
-        /* 입력창 영역 */
+        /* 3. 메뉴 내비게이션 */
+        nav { display: flex; justify-content: center; gap: 8px; padding: 10px; overflow-x: auto; }
+        nav button {
+            background: white; border: 1px solid #ddd; padding: 6px 12px; border-radius: 20px;
+            font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+        }
+        nav button.active { background: var(--point-orange); color: white; border-color: var(--point-orange); }
+
+        /* 4. 입력 카드 */
         .editor-card {
-            background: var(--card-bg); border-radius: 20px;
-            padding: 24px; border: 1px solid #eee;
-            margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            background: var(--card-white); border-radius: 15px; padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-top: 20px;
         }
-        input, textarea {
-            width: 100%; border: 1px solid #f0f0f0; border-radius: 12px;
-            padding: 14px; margin-bottom: 12px; box-sizing: border-box;
-            background: #fafafa; font-size: 0.95rem; outline: none;
+        .editor-card input, .editor-card textarea {
+            width: 100%; border: 1px solid #eee; border-radius: 8px;
+            padding: 12px; margin-bottom: 10px; box-sizing: border-box; background: #fafafa;
         }
-        input:focus, textarea:focus { border-color: var(--point-orange); background: white; }
-        
         .main-btn {
-            width: 100%; padding: 16px; border: none; border-radius: 12px;
-            background: var(--point-orange); color: white;
-            font-weight: 600; cursor: pointer; font-size: 1rem;
+            width: 100%; padding: 15px; border: none; border-radius: 8px;
+            background: var(--point-orange); color: white; font-weight: bold; cursor: pointer;
         }
 
-        /* 게시글 카드 */
+        /* 5. 게시글 스타일 */
         .post-card {
-            background: var(--card-bg); border-radius: 20px;
-            padding: 24px; margin-bottom: 20px;
-            border: 1px solid #eee;
+            background: white; border-radius: 15px; padding: 20px; margin-top: 20px;
+            border: 1px solid #f0f0f0;
         }
-        .post-top {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 15px; border-bottom: 1px solid #f9f9f9; padding-bottom: 10px;
-        }
-        .post-date-info { font-size: 0.75rem; color: var(--text-muted); }
-        .post-category-tag { 
-            font-size: 0.7rem; font-weight: bold; color: var(--point-orange);
-            background: var(--soft-orange); padding: 3px 8px; border-radius: 5px;
-        }
-        
-        .post-title { 
-            font-size: 1.15rem; font-weight: 600; margin-bottom: 12px; 
-            color: #222; line-height: 1.4;
-        }
-        .post-content { line-height: 1.7; font-size: 0.95rem; color: #4a4a4a; }
-        
-        .post-footer {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-top: 20px; padding-top: 15px; border-top: 1px solid #f9f9f9;
-        }
-        .post-link { font-size: 0.8rem; color: var(--point-orange); text-decoration: none; }
-        .del-btn { font-size: 0.75rem; color: #ffcccc; background: none; border: none; cursor: pointer; }
-        .del-btn:hover { color: #ff5e5e; }
+        .post-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.8rem; color: #888; }
+        .post-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; color: var(--point-orange); }
+        .post-content { line-height: 1.6; font-size: 0.95rem; }
+        .post-footer { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .del-btn { background: none; border: none; color: #ffcccc; cursor: pointer; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-    <header>
+    <div class="hero-section">
         <h1>KNOWLEDGE VAULT</h1>
-    </header>
+        <p style="font-size: 0.8rem; opacity: 0.8;">당신의 지적인 통찰을 기록하세요</p>
+    </div>
 
-    <nav id="menuNav">
+    <div class="google-search-container">
+        <form action="https://www.google.com/search" method="GET" target="_blank">
+            <input type="text" name="q" placeholder="Google 검색...">
+            <button type="submit" class="search-btn">🔍</button>
+        </form>
+    </div>
+
+    <nav>
         <button onclick="setCategory('의학')" id="menu-의학">의학</button>
         <button onclick="setCategory('시사')" id="menu-시사">시사</button>
         <button onclick="setCategory('과학')" id="menu-과학">과학</button>
@@ -116,9 +100,9 @@
 
     <div class="container">
         <div class="editor-card">
-            <input type="text" id="postTitle" placeholder="글 제목을 입력하세요">
-            <input type="text" id="postLink" placeholder="🔗 관련 사진/링크 (선택)">
-            <textarea id="postContent" placeholder="여기에 긴 내용을 기록하세요."></textarea>
+            <input type="text" id="postTitle" placeholder="제목">
+            <input type="text" id="postLink" placeholder="🔗 사진 URL 또는 링크">
+            <textarea id="postContent" placeholder="내용을 입력하세요..." rows="4"></textarea>
             <button class="main-btn" onclick="savePost()">기록하기</button>
         </div>
         <div id="board"></div>
@@ -138,16 +122,12 @@
             const title = document.getElementById('postTitle').value;
             const content = document.getElementById('postContent').value;
             const link = document.getElementById('postLink').value;
-            if(!title || !content) { alert("제목과 내용을 입력해주세요!"); return; }
+            if(!title || !content) return;
 
-            const posts = JSON.parse(localStorage.getItem('finalVaultPosts') || '[]');
-            posts.unshift({
-                category: currentCategory === '전체' ? '기타' : currentCategory,
-                title, content, link, date: new Date().toLocaleString()
-            });
-            localStorage.setItem('finalVaultPosts', JSON.stringify(posts));
+            const posts = JSON.parse(localStorage.getItem('vaultV3') || '[]');
+            posts.unshift({ category: currentCategory, title, content, link, date: new Date().toLocaleDateString() });
+            localStorage.setItem('vaultV3', JSON.stringify(posts));
             
-            // 초기화
             document.getElementById('postTitle').value = '';
             document.getElementById('postContent').value = '';
             document.getElementById('postLink').value = '';
@@ -155,32 +135,26 @@
         }
 
         function deletePost(index) {
-            if(confirm("이 기록을 삭제하시겠습니까?")) {
-                const posts = JSON.parse(localStorage.getItem('finalVaultPosts') || '[]');
-                posts.splice(index, 1);
-                localStorage.setItem('finalVaultPosts', JSON.stringify(posts));
-                renderPosts();
-            }
+            const posts = JSON.parse(localStorage.getItem('vaultV3') || '[]');
+            posts.splice(index, 1);
+            localStorage.setItem('vaultV3', JSON.stringify(posts));
+            renderPosts();
         }
 
         function renderPosts() {
             const board = document.getElementById('board');
             board.innerHTML = '';
-            const posts = JSON.parse(localStorage.getItem('finalVaultPosts') || '[]');
-            
+            const posts = JSON.parse(localStorage.getItem('vaultV3') || '[]');
             posts.forEach((p, index) => {
                 if(currentCategory !== '전체' && p.category !== currentCategory) return;
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.innerHTML = `
-                    <div class="post-top">
-                        <span class="post-category-tag">${p.category}</span>
-                        <span class="post-date-info">${p.date}</span>
-                    </div>
+                    <div class="post-header"><span>${p.category}</span><span>${p.date}</span></div>
                     <div class="post-title">${p.title}</div>
                     <div class="post-content">${p.content}</div>
                     <div class="post-footer">
-                        ${p.link ? `<a href="${p.link}" target="_blank" class="post-link">📍 관련 자료 보기</a>` : '<span></span>'}
+                        ${p.link ? `<a href="${p.link}" target="_blank" style="color: var(--point-orange); font-size: 0.8rem;">자료 보기</a>` : '<div></div>'}
                         <button class="del-btn" onclick="deletePost(${index})">삭제</button>
                     </div>`;
                 board.appendChild(card);
