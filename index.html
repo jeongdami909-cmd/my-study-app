@@ -1,1 +1,56 @@
 
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 지식 보관소</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; padding: 20px; }
+        h2 { color: #333; }
+        #memoInput { width: 100%; height: 100px; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 8px; }
+        button { width: 100%; padding: 10px; background: #5c67a3; color: white; border: none; border-radius: 8px; margin-top: 10px; cursor: pointer; }
+        #memoList { margin-top: 20px; }
+        .memo-item { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .date { font-size: 0.8em; color: #888; }
+    </style>
+</head>
+<body>
+
+    <h2>📚 지식 보관소</h2>
+    <textarea id="memoInput" placeholder="오늘 공부한 내용이나 영감을 기록하세요..."></textarea>
+    <button onclick="saveMemo()">저장하기</button>
+
+    <div id="memoList"></div>
+
+    <script>
+        // 저장된 메모 불러오기
+        function loadMemos() {
+            const list = document.getElementById('memoList');
+            list.innerHTML = '';
+            const memos = JSON.parse(localStorage.getItem('myMemos') || '[]');
+            memos.forEach((m, index) => {
+                const div = document.createElement('div');
+                div.className = 'memo-item';
+                div.innerHTML = `<div class="date">${m.date}</div><div>${m.content}</div>`;
+                list.appendChild(div);
+            });
+        }
+
+        // 메모 저장하기
+        function saveMemo() {
+            const content = document.getElementById('memoInput').value;
+            if(!content) return;
+            const memos = JSON.parse(localStorage.getItem('myMemos') || '[]');
+            memos.unshift({ content, date: new Date().toLocaleString() });
+            localStorage.setItem('myMemos', JSON.stringify(memos));
+            document.getElementById('memoInput').value = '';
+            loadMemos();
+        }
+
+        loadMemos();
+    </script>
+</body>
+</html>
