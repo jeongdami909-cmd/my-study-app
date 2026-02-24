@@ -3,320 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Knowledge Vault</title>
+    <title>The Annals - Historical Records</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f4f2f0;
-            --point-color: #c36839;
-            --point-hover: #a6552c;
-            --text-main: #2b2b2b;
-            --text-sub: #7a7a7a;
-            --card-bg: #ffffff;
+            --bg-marble: #f4f1ea; 
+            --card-slate: #5e686d; 
+            --text-cream: #eaddcf; 
+            --text-dark: #2c3032; 
+            --accent-gold: #bda27e; 
         }
 
         body { 
-            background-color: var(--bg-color); font-family: 'Pretendard', -apple-system, sans-serif; 
-            margin: 0; color: var(--text-main); -webkit-font-smoothing: antialiased;
+            background-color: var(--bg-marble); 
+            font-family: 'Noto Serif KR', serif; 
+            margin: 0; color: var(--text-dark); 
+            -webkit-font-smoothing: antialiased;
+            padding-bottom: 80px;
         }
 
-        /* 상단 커버 */
-        .top-hero {
-            width: 100%; height: 220px; background-color: #ddd;
-            background-size: cover; background-position: center;
-            display: flex; align-items: center; justify-content: center; position: relative;
+        /* 1. 최상단 큰 사진 영역 */
+        .hero-section {
+            width: 100%; height: 350px; 
+            background-color: #333;
+            background-image: url('https://images.unsplash.com/photo-1578301978018-3005759f48f7?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover; background-position: center 20%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: relative;
         }
-        .hero-overlay {
-            position: absolute; bottom: 12px; right: 15px;
-            background: rgba(0,0,0,0.6); padding: 6px 12px; border-radius: 6px;
-            color: white; font-size: 0.75rem; cursor: pointer; letter-spacing: 0.5px;
-            backdrop-filter: blur(4px); transition: 0.2s;
+        .hero-section::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.4); z-index: 1; }
+        .hero-title {
+            position: relative; z-index: 2;
+            font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 700; 
+            color: var(--text-cream); letter-spacing: 6px; text-shadow: 2px 4px 10px rgba(0,0,0,0.5);
+            margin: 0;
         }
-        
-        /* 검색바 */
-        .search-area { width: 92%; max-width: 600px; margin: -25px auto 15px; position: relative; z-index: 10; }
-        .google-search { 
-            display: flex; background: var(--card-bg); border-radius: 12px; 
-            padding: 8px 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border: 1px solid #ebebeb;
+        .hero-subtitle {
+            position: relative; z-index: 2;
+            font-family: 'Playfair Display', serif; font-size: 1rem; font-style: italic;
+            color: var(--accent-gold); letter-spacing: 2px; margin-top: 10px;
         }
-        .google-search input { flex: 1; border: none; outline: none; font-size: 0.95rem; color: var(--text-main); background: transparent; }
-        
-        /* 상단 메뉴 */
-        nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 10px 15px 20px; max-width: 600px; margin: 0 auto; }
-        nav button { 
-            background: var(--card-bg); border: 1px solid #e0e0e0; padding: 8px 16px; 
-            border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; 
-            color: var(--text-sub); transition: 0.2s; 
+        .hero-overlay-btn {
+            position: absolute; bottom: 15px; right: 20px; z-index: 2;
+            background: rgba(0,0,0,0.5); padding: 5px 12px; border-radius: 4px;
+            color: rgba(255,255,255,0.7); font-size: 0.75rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
         }
-        nav button.active { background: var(--point-color); color: white; border-color: var(--point-color); }
 
-        .container { width: 92%; max-width: 650px; margin: 0 auto; padding-bottom: 60px; }
-
-        /* 입력란 카드 */
-        .editor-card { 
-            background: var(--card-bg); border-radius: 16px; padding: 25px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 35px; border: 1px solid #eaeaea;
-        }
-        .editor-header { margin-top: 0; margin-bottom: 20px; font-size: 1.1rem; color: var(--text-main); font-weight: 700; }
-        
-        /* 삐져나감 해결: min-width: 0 추가 및 비율 조정 */
-        .input-row { display: flex; gap: 10px; margin-bottom: 12px; width: 100%; box-sizing: border-box; }
-        .input-row input { flex: 7; margin-bottom: 0; min-width: 0; }
-        .input-row select { flex: 3; margin-bottom: 0; min-width: 0; padding-left: 10px; padding-right: 10px; cursor: pointer; background-color: #fcfcfc; }
-        
-        .editor-card input, .editor-card select { 
-            border: 1px solid #e2e2e2; border-radius: 8px; padding: 14px; 
-            box-sizing: border-box; font-size: 0.95rem; outline: none; transition: 0.2s;
+        /* 2. 통합 검색 컨테이너 (구글 + 내 DB) */
+        .search-container {
+            width: 90%; max-width: 700px; margin: -25px auto 30px; position: relative; z-index: 10;
+            display: flex; flex-direction: column; gap: 10px; align-items: center;
         }
         
-        /* 텍스트 영역: 스크롤바 숨기고 기본 높이 지정 */
-        .editor-card textarea {
-            width: 100%; border: 1px solid #e2e2e2; border-radius: 8px; padding: 15px; 
-            box-sizing: border-box; font-size: 1rem; outline: none; transition: 0.2s;
-            min-height: 150px; resize: none; overflow-y: hidden; line-height: 1.6;
-            font-family: inherit;
+        /* 메인 구글 검색창 */
+        .google-search {
+            width: 100%; display: flex; background: var(--bg-marble); border: 1px solid var(--accent-gold);
+            padding: 12px 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 30px;
         }
-        
-        .editor-card input:focus, .editor-card textarea:focus, .editor-card select:focus { border-color: var(--point-color); background: #fff; }
-        
-        /* 파일 박스 */
-        .file-box { border: 1px dashed #d0d0d0; padding: 16px; text-align: center; border-radius: 8px; margin-bottom: 12px; cursor: pointer; color: var(--text-sub); font-size: 0.9rem; background: #fafafa; transition: 0.2s; }
-        .file-box:hover { border-color: var(--point-color); color: var(--point-color); background: #fffaf7; }
+        .google-search input {
+            flex: 1; border: none; outline: none; background: transparent; 
+            font-family: 'Noto Serif KR', serif; font-size: 1rem; color: var(--text-dark);
+        }
+        .google-search button { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--accent-gold); }
 
-        .main-btn { width: 100%; padding: 16px; border: none; border-radius: 8px; background: var(--point-color); color: white; font-weight: 600; cursor: pointer; font-size: 1.05rem; }
+        /* 새로 추가된 '내 DB 검색창' (작고 세련되게) */
+        .local-search {
+            width: 60%; max-width: 400px; display: flex; align-items: center;
+            background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(189, 162, 126, 0.5);
+            padding: 6px 15px; border-radius: 20px; backdrop-filter: blur(4px);
+        }
+        .local-search input {
+            flex: 1; border: none; outline: none; background: transparent;
+            font-family: 'Noto Serif KR', serif; font-size: 0.85rem; color: #555;
+        }
+        .local-search input::placeholder { color: #888; }
+        .local-search span { font-size: 0.8rem; color: var(--accent-gold); margin-right: 8px; }
 
-        /* 게시판 리스트 */
-        .post-card { background: var(--card-bg); border-radius: 16px; margin-bottom: 20px; padding: 20px; display: flex; gap: 20px; position: relative; border: 1px solid #eaeaea; }
-        .post-thumb { width: 110px; height: 110px; border-radius: 10px; object-fit: cover; flex-shrink: 0; cursor: pointer; border: 1px solid #f0f0f0; }
-        
-        /* 텍스트 클릭 시 펼쳐지게 하는 영역 */
-        .post-content-area { flex: 1; display: flex; flex-direction: column; cursor: pointer; }
-        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .post-category { font-size: 0.75rem; font-weight: 700; color: var(--point-color); }
-        .post-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: var(--text-main); line-height: 1.3; }
-        
-        /* 💡 핵심 수정 부분: 평소엔 3줄, 펼치면 전체 표시 */
-        .post-text { line-height: 1.6; font-size: 0.95rem; color: #555; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; flex-grow: 1; transition: all 0.3s ease; }
-        .post-text.expanded { display: block; -webkit-line-clamp: unset; }
-        
-        /* 펼쳐보기 힌트 버튼 */
-        .expand-hint { font-size: 0.8rem; color: var(--point-color); font-weight: bold; margin-top: 8px; }
-        .post-date { font-size: 0.75rem; color: #aaa; margin-top: 12px; }
+        /* 3. 6개 대륙 메뉴 */
+        nav {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; 
+            max-width: 800px; margin: 0 auto 40px; padding: 0 20px;
+        }
+        .nav-btn {
+            background: transparent; border: none; font-family: 'Noto Serif KR', serif;
+            font-size: 0.95rem; font-weight: 500; color: #7a756d; cursor: pointer; 
+            padding: 5px 10px; transition: 0.3s; border-bottom: 2px solid transparent;
+        }
+        .nav-btn:hover { color: var(--text-dark); }
+        .nav-btn.active { color: var(--text-dark); border-bottom-color: var(--accent-gold); font-weight: 700; }
 
-        /* 수정/삭제 버튼 */
-        .post-actions { position: absolute; top: 18px; right: 20px; display: flex; gap: 6px; z-index: 5; }
-        .action-btn { background: #f4f4f4; border: none; padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; color: #666; font-weight: 500; }
-        .action-btn:hover { background: #e0e0e0; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+        /* 입력 폼 */
+        .editor-card {
+            background: var(--card-slate); border-radius: 4px; padding: 30px; 
+            margin-bottom: 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid #717c82;
+        }
+        .editor-header {
+            font-family: 'Playfair Display', serif; font-size: 1.5rem; 
+            color: var(--accent-gold); margin-top: 0; margin-bottom: 25px; text-align: center;
+        }
+        .input-row { display: flex; gap: 15px; margin-bottom: 15px; }
+        .editor-card input, .editor-card select, .editor-card textarea {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(234, 221, 207, 0.2);
+            padding: 15px; color: var(--text-cream); font-family: 'Noto Serif KR', serif;
+            font-size: 1rem; outline: none; box-sizing: border-box; transition: 0.3s;
+        }
+        .editor-card select { flex: 1; cursor: pointer; }
+        .editor-card select option { background: var(--card-slate); color: var(--text-cream); }
+        .editor-card input[type="text"] { flex: 3; }
+        .editor-card input:focus, .editor-card select:focus, .editor-card textarea:focus {
+            border-color: var(--accent-gold); background: rgba(255,255,255,0.1);
+        }
+        .editor-card textarea { min-height: 120px; resize: none; overflow-y: hidden; line-height: 1.7; }
+        .editor-card textarea::placeholder, .editor-card input::placeholder { color: rgba(234, 221, 207, 0.4); }
+
+        .file-box {
+            border: 1px dashed rgba(234, 221, 207, 0.3); padding: 15px; text-align: center; 
+            margin-bottom: 15px; cursor: pointer; color: var(--accent-gold); font-size: 0.9rem; transition: 0.2s;
+        }
+        .file-box:hover { background: rgba(189, 162, 126, 0.1); border-color: var(--accent-gold); }
+
+        .btn-save {
+            width: 100%; background: var(--accent-gold); color: #fff; border: none; padding: 16px;
+            font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .btn-save:hover { background: #a68c68; }
+
+        /* 게시판 영역 */
+        .board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; }
+        
+        .post-card {
+            background: var(--card-slate); display: flex; flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid #717c82;
+            transition: transform 0.3s;
+        }
+        .post-card:hover { transform: translateY(-5px); }
+
+        .post-actions-top {
+            display: flex; justify-content: flex-end; padding: 10px 15px; gap: 10px;
+            background: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .action-btn {
+            background: transparent; border: 1px solid rgba(234, 221, 207, 0.3); 
+            color: rgba(234, 221, 207, 0.7); padding: 4px 12px; font-size: 0.75rem; 
+            cursor: pointer; font-family: 'Noto Serif KR', serif; transition: 0.2s;
+        }
+        .action-btn:hover { background: var(--accent-gold); color: white; border-color: var(--accent-gold); }
+        .action-btn.del:hover { background: #964242; border-color: #964242; }
+
+        .post-img-slot { width: 100%; height: 220px; background: rgba(0,0,0,0.2); overflow: hidden; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.2); font-size: 0.8rem; }
+        .post-img { width: 100%; height: 100%; object-fit: cover; }
+
+        .post-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+        .post-meta { font-size: 0.8rem; color: var(--accent-gold); margin-bottom: 10px; font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 1px; }
+        .post-title { font-family: 'Noto Serif KR', serif; font-size: 1.3rem; font-weight: 700; color: var(--text-cream); margin-bottom: 15px; line-height: 1.4; }
+        .post-text { font-size: 0.95rem; line-height: 1.8; color: #d0d5d8; white-space: pre-wrap; flex-grow: 1; margin-bottom: 20px; }
+        .post-date { font-size: 0.8rem; color: rgba(255,255,255,0.4); text-align: right; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="top-hero" id="topHero" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80');">
-        <label class="hero-overlay">
-            📷 커버 변경
+    <div class="hero-section" id="heroBg">
+        <label class="hero-overlay-btn">
+            배경 변경
             <input type="file" id="heroInput" hidden accept="image/*">
         </label>
-        <h1 style="color:white; font-size:2rem; font-weight:300; letter-spacing:8px; text-shadow: 0 4px 15px rgba(0,0,0,0.4);">VAULT</h1>
+        <h1 class="hero-title">ANNALS</h1>
+        <div class="hero-subtitle">Chronicles of the Continents</div>
     </div>
 
-    <div class="search-area">
+    <div class="search-container">
         <div class="google-search">
             <form action="https://www.google.com/search" method="GET" target="_blank" style="width:100%; display:flex; align-items:center;">
-                <span style="color:#aaa; margin-right:8px; font-size:1.1rem;">🔍</span>
-                <input type="text" name="q" placeholder="구글 지식 검색...">
+                <input type="text" name="q" placeholder="역사적 사실을 구글에서 검색하세요...">
+                <button type="submit">🔍</button>
             </form>
+        </div>
+        
+        <div class="local-search">
+            <span>⚲</span>
+            <input type="text" id="localSearchInput" placeholder="내 기록 안에서 키워드 찾기..." onkeyup="filterRecords()">
         </div>
     </div>
 
     <nav>
-        <button onclick="setFilter('의학')" id="menu-의학">의학</button>
-        <button onclick="setFilter('시사')" id="menu-시사">시사</button>
-        <button onclick="setFilter('과학')" id="menu-과학">과학</button>
-        <button onclick="setFilter('인물')" id="menu-인물">인물</button>
-        <button onclick="setFilter('New Fields')" id="menu-New Fields">New Fields</button>
-        <button onclick="setFilter('전체')" id="menu-전체" class="active">전체</button>
+        <button class="nav-btn active" onclick="setFilter('전체', this)">전체보기</button>
+        <button class="nav-btn" onclick="setFilter('아시아', this)">아시아</button>
+        <button class="nav-btn" onclick="setFilter('유럽', this)">유럽</button>
+        <button class="nav-btn" onclick="setFilter('아프리카', this)">아프리카</button>
+        <button class="nav-btn" onclick="setFilter('북아메리카', this)">북아메리카</button>
+        <button class="nav-btn" onclick="setFilter('남아메리카', this)">남아메리카</button>
+        <button class="nav-btn" onclick="setFilter('오세아니아', this)">오세아니아</button>
     </nav>
 
     <div class="container">
         <div class="editor-card">
-            <div class="editor-header">지식 기록하기</div>
-            
+            <h2 class="editor-header">Add a Record</h2>
             <div class="input-row">
-                <input type="text" id="postTitle" placeholder="제목">
-                <select id="postCategory">
-                    <option value="의학">의학</option>
-                    <option value="시사">시사</option>
-                    <option value="과학">과학</option>
-                    <option value="인물">인물</option>
-                    <option value="New Fields">New Fields</option>
+                <select id="postContinent">
+                    <option value="아시아">아시아</option>
+                    <option value="유럽">유럽</option>
+                    <option value="아프리카">아프리카</option>
+                    <option value="북아메리카">북아메리카</option>
+                    <option value="남아메리카">남아메리카</option>
+                    <option value="오세아니아">오세아니아</option>
                 </select>
+                <input type="text" id="postTitle" placeholder="기록의 제목을 입력하세요">
             </div>
 
             <div class="file-box" onclick="document.getElementById('postFileInput').click()" id="fileBoxText">
-                + 관련 사진 첨부
+                + 관련 역사 사진 또는 문서 첨부
             </div>
             <input type="file" id="postFileInput" hidden accept="image/*">
             
-            <textarea id="postContent" placeholder="여기에 내용을 기록하세요. 긴 글을 쓰면 칸이 아래로 자동으로 늘어납니다..." oninput="autoResize(this)"></textarea>
+            <textarea id="postContent" placeholder="상세한 역사적 기록을 남겨주세요..." oninput="autoResize(this)"></textarea>
             
-            <button class="main-btn" onclick="savePost()">저장하기</button>
+            <button class="btn-save" onclick="saveRecord()">기록 보존하기</button>
         </div>
 
-        <div id="board"></div>
+        <div class="board-grid" id="boardGrid">
+            </div>
     </div>
 
     <script>
         let currentFilter = '전체'; 
-        let selectedPostImg = "";
+        let selectedImg = "";
         let editIndex = -1;
-
-        function autoResize(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-        }
 
         document.getElementById('heroInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(file) {
                 const reader = new FileReader();
                 reader.onload = (ev) => {
-                    document.getElementById('topHero').style.backgroundImage = `url(${ev.target.result})`;
-                    localStorage.setItem('heroImg', ev.target.result);
+                    document.getElementById('heroBg').style.backgroundImage = `url(${ev.target.result})`;
+                    localStorage.setItem('annals_hero_bg', ev.target.result);
                 };
                 reader.readAsDataURL(file);
             }
         });
+
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
 
         document.getElementById('postFileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(file) {
                 const reader = new FileReader();
                 reader.onload = (ev) => { 
-                    selectedPostImg = ev.target.result; 
-                    document.getElementById('fileBoxText').innerHTML = "✔️ 사진 첨부됨 (클릭 시 변경)";
-                    document.getElementById('fileBoxText').style.borderColor = "var(--point-color)";
-                    document.getElementById('fileBoxText').style.color = "var(--point-color)";
+                    selectedImg = ev.target.result; 
+                    document.getElementById('fileBoxText').innerHTML = "✔️ 이미지 첨부 완료 (클릭 시 교체)";
+                    document.getElementById('fileBoxText').style.borderColor = "var(--accent-gold)";
+                    document.getElementById('fileBoxText').style.color = "var(--text-cream)";
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        function setFilter(cat) {
-            currentFilter = cat;
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-            document.getElementById(`menu-${cat}`).classList.add('active');
-            renderPosts();
+        // 💡 혁신 1단계: 검색어와 대륙 메뉴를 동시에 고려하는 필터 함수
+        function filterRecords() {
+            renderRecords(); 
         }
 
-        function savePost() {
+        function setFilter(continent, btnElement) {
+            currentFilter = continent;
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+            renderRecords();
+        }
+
+        function saveRecord() {
             const title = document.getElementById('postTitle').value;
             const content = document.getElementById('postContent').value;
-            const category = document.getElementById('postCategory').value; 
+            const continent = document.getElementById('postContinent').value; 
             
             if(!title || !content) { alert("제목과 내용을 입력해주세요."); return; }
 
-            const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
-            const data = { category: category, title, content, img: selectedPostImg, date: new Date().toLocaleDateString() };
+            const records = JSON.parse(localStorage.getItem('annals_history_data') || '[]');
+            const today = new Date();
+            const dateStr = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
 
-            if(editIndex > -1) { posts[editIndex] = data; editIndex = -1; }
-            else { posts.unshift(data); }
+            const data = { continent, title, content, img: selectedImg, date: dateStr };
 
-            localStorage.setItem('vaultFinalV7', JSON.stringify(posts));
+            if(editIndex > -1) { records[editIndex] = data; editIndex = -1; }
+            else { records.unshift(data); }
+
+            localStorage.setItem('annals_history_data', JSON.stringify(records));
             resetForm();
-            renderPosts();
+            renderRecords();
         }
 
         function resetForm() {
             document.getElementById('postTitle').value = '';
             const contentBox = document.getElementById('postContent');
-            contentBox.value = '';
-            contentBox.style.height = '150px'; 
-            document.getElementById('postCategory').value = '의학'; 
-            selectedPostImg = "";
-            document.getElementById('fileBoxText').innerHTML = "+ 관련 사진 첨부";
-            document.getElementById('fileBoxText').style.borderColor = "#d0d0d0";
-            document.getElementById('fileBoxText').style.color = "var(--text-sub)";
+            contentBox.value = ''; contentBox.style.height = '120px'; 
+            document.getElementById('postContinent').value = '아시아'; 
+            selectedImg = "";
+            document.getElementById('fileBoxText').innerHTML = "+ 관련 역사 사진 또는 문서 첨부";
+            document.getElementById('fileBoxText').style.borderColor = "rgba(234, 221, 207, 0.3)";
+            document.getElementById('fileBoxText').style.color = "var(--accent-gold)";
         }
 
-        function deletePost(event, index) {
-            event.stopPropagation(); // 카드 클릭(펼치기) 이벤트 막기
-            if(confirm("기록을 삭제하시겠습니까?")) {
-                const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
-                posts.splice(index, 1);
-                localStorage.setItem('vaultFinalV7', JSON.stringify(posts));
-                renderPosts();
-            }
-        }
-
-        function editPost(event, index) {
-            event.stopPropagation(); // 카드 클릭(펼치기) 이벤트 막기
-            const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
-            const p = posts[index];
-            document.getElementById('postTitle').value = p.title;
-            document.getElementById('postCategory').value = p.category; 
+        function editRecord(index) {
+            const records = JSON.parse(localStorage.getItem('annals_history_data') || '[]');
+            const r = records[index];
+            document.getElementById('postTitle').value = r.title;
+            document.getElementById('postContinent').value = r.continent; 
             
             const contentBox = document.getElementById('postContent');
-            contentBox.value = p.content;
+            contentBox.value = r.content;
             autoResize(contentBox); 
             
-            selectedPostImg = p.img || "";
-            
-            if(p.img) {
-                document.getElementById('fileBoxText').innerHTML = "✔️ 기존 사진 유지 (클릭 시 변경)";
-                document.getElementById('fileBoxText').style.color = "var(--point-color)";
-                document.getElementById('fileBoxText').style.borderColor = "var(--point-color)";
+            selectedImg = r.img || "";
+            if(r.img) {
+                document.getElementById('fileBoxText').innerHTML = "✔️ 기존 이미지 유지 (클릭 시 교체)";
+                document.getElementById('fileBoxText').style.color = "var(--text-cream)";
             } else {
-                document.getElementById('fileBoxText').innerHTML = "+ 관련 사진 첨부";
-                document.getElementById('fileBoxText').style.borderColor = "#d0d0d0";
-                document.getElementById('fileBoxText').style.color = "var(--text-sub)";
+                document.getElementById('fileBoxText').innerHTML = "+ 관련 역사 사진 또는 문서 첨부";
             }
             editIndex = index;
-            window.scrollTo({top: 300, behavior: 'smooth'});
+            window.scrollTo({top: 400, behavior: 'smooth'});
         }
 
-        // 💡 게시글 펼치기/접기 함수
-        function toggleText(element) {
-            const textEl = element.querySelector('.post-text');
-            const hintEl = element.querySelector('.expand-hint');
-            textEl.classList.toggle('expanded');
-            
-            if (textEl.classList.contains('expanded')) {
-                hintEl.innerText = '접기 ▴';
-            } else {
-                hintEl.innerText = '자세히 보기 ▾';
+        function deleteRecord(index) {
+            if(confirm("이 역사적 기록을 정말 삭제하시겠습니까?")) {
+                const records = JSON.parse(localStorage.getItem('annals_history_data') || '[]');
+                records.splice(index, 1);
+                localStorage.setItem('annals_history_data', JSON.stringify(records));
+                renderRecords();
             }
         }
 
-        function renderPosts() {
-            const board = document.getElementById('board'); board.innerHTML = '';
-            const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
+        function renderRecords() {
+            const board = document.getElementById('boardGrid'); 
+            board.innerHTML = '';
+            const records = JSON.parse(localStorage.getItem('annals_history_data') || '[]');
             
-            posts.forEach((p, index) => {
-                if(currentFilter !== '전체' && p.category !== currentFilter) return;
+            // 사용자가 입력한 검색어 가져오기
+            const searchQuery = document.getElementById('localSearchInput').value.toLowerCase();
+            
+            records.forEach((r, index) => {
+                // 1차 필터: 대륙 메뉴
+                if(currentFilter !== '전체' && r.continent !== currentFilter) return;
+                
+                // 2차 필터: 검색어 (제목이나 내용에 검색어가 포함되어 있는지 확인)
+                if(searchQuery) {
+                    const titleMatch = r.title.toLowerCase().includes(searchQuery);
+                    const contentMatch = r.content.toLowerCase().includes(searchQuery);
+                    if(!titleMatch && !contentMatch) return; // 포함되지 않으면 그리지 않음
+                }
                 
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.innerHTML = `
-                    <div class="post-actions">
-                        <button class="action-btn" onclick="editPost(event, ${index})">수정</button>
-                        <button class="action-btn" onclick="deletePost(event, ${index})">삭제</button>
+                    <div class="post-actions-top">
+                        <button class="action-btn" onclick="editRecord(${index})">Edit</button>
+                        <button class="action-btn del" onclick="deleteRecord(${index})">Delete</button>
                     </div>
-                    ${p.img ? `<img src="${p.img}" class="post-thumb" onclick="window.open(this.src)">` : `<div class="post-thumb" style="display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:#ccc;background:#f9f9f9;">NO IMG</div>`}
-                    
-                    <div class="post-content-area" onclick="toggleText(this)">
-                        <div class="post-header"><span class="post-category">${p.category}</span></div>
-                        <div class="post-title">${p.title}</div>
-                        <div class="post-text">${p.content}</div>
-                        <div class="expand-hint">자세히 보기 ▾</div>
-                        <div class="post-date">${p.date}</div>
+                    <div class="post-img-slot">
+                        ${r.img ? `<img src="${r.img}" class="post-img" onclick="window.open(this.src)">` : 'No Image Recorded'}
+                    </div>
+                    <div class="post-content">
+                        <div class="post-meta">${r.continent}</div>
+                        <div class="post-title">${r.title}</div>
+                        <div class="post-text">${r.content}</div>
+                        <div class="post-date">${r.date}</div>
                     </div>
                 `;
                 board.appendChild(card);
             });
         }
         
-        const savedHero = localStorage.getItem('heroImg');
-        if(savedHero) document.getElementById('topHero').style.backgroundImage = `url(${savedHero})`;
-        renderPosts();
+        const savedHero = localStorage.getItem('annals_hero_bg');
+        if(savedHero) document.getElementById('heroBg').style.backgroundImage = `url(${savedHero})`;
+        
+        renderRecords();
     </script>
 </body>
 </html>
