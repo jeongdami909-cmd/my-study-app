@@ -1,387 +1,315 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Annals - Historical Records</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-marble: #f4f1ea; 
-            --card-slate: #5e686d; 
-            --text-cream: #eaddcf; 
-            --text-dark: #2c3032; 
-            --accent-gold: #bda27e; 
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insights Vault - Quant & Finance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f8f9fa; 
+  --text-main: #1a1a1a;
+  --text-muted: #6c757d;
+  --accent-color: #0d3b66; 
+  --border-color: #e9ecef;
+}
 
-        body { 
-            background-color: var(--bg-marble); 
-            font-family: 'Noto Serif KR', serif; 
-            margin: 0; color: var(--text-dark); 
-            -webkit-font-smoothing: antialiased;
-            padding-bottom: 80px;
-        }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 80px; }
 
-        /* 1. 최상단 큰 사진 영역 */
-        .hero-section {
-            width: 100%; height: 350px; 
-            background-color: #333;
-            background-image: url('https://images.unsplash.com/photo-1578301978018-3005759f48f7?auto=format&fit=crop&w=1200&q=80');
-            background-size: cover; background-position: center 20%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            position: relative;
-        }
-        .hero-section::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.4); z-index: 1; }
-        .hero-title {
-            position: relative; z-index: 2;
-            font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 700; 
-            color: var(--text-cream); letter-spacing: 6px; text-shadow: 2px 4px 10px rgba(0,0,0,0.5);
-            margin: 0;
-        }
-        .hero-subtitle {
-            position: relative; z-index: 2;
-            font-family: 'Playfair Display', serif; font-size: 1rem; font-style: italic;
-            color: var(--accent-gold); letter-spacing: 2px; margin-top: 10px;
-        }
-        .hero-overlay-btn {
-            position: absolute; bottom: 15px; right: 20px; z-index: 2;
-            background: rgba(0,0,0,0.5); padding: 5px 12px; border-radius: 4px;
-            color: rgba(255,255,255,0.7); font-size: 0.75rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
-        }
+/* 헤더 & 프로필 영역 */
+.site-header { text-align: center; padding: 60px 20px 30px; background: white; border-bottom: 1px solid var(--border-color); }
+.site-title { font-family:'Playfair Display', serif; font-size: 2.8rem; font-weight:700; color: var(--accent-color); margin-bottom: 10px; letter-spacing: -0.5px; }
+.site-subtitle { font-size: 0.95rem; color: var(--text-muted); font-weight: 300; max-width: 600px; margin: 0 auto 25px; line-height: 1.6; }
+.btn-new { background: var(--accent-color); color: white; border: none; padding: 10px 28px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.5px; transition: 0.3s; }
+.btn-new:hover { background: #0a2c4c; box-shadow: 0 4px 12px rgba(13, 59, 102, 0.2); }
 
-        /* 2. 통합 검색 컨테이너 (구글 + 내 DB) */
-        .search-container {
-            width: 90%; max-width: 700px; margin: -25px auto 30px; position: relative; z-index: 10;
-            display: flex; flex-direction: column; gap: 10px; align-items: center;
-        }
-        
-        /* 메인 구글 검색창 */
-        .google-search {
-            width: 100%; display: flex; background: var(--bg-marble); border: 1px solid var(--accent-gold);
-            padding: 12px 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 30px;
-        }
-        .google-search input {
-            flex: 1; border: none; outline: none; background: transparent; 
-            font-family: 'Noto Serif KR', serif; font-size: 1rem; color: var(--text-dark);
-        }
-        .google-search button { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--accent-gold); }
+/* 💡 혁신된 통합 검색 컨테이너 */
+.search-container { width: 92%; max-width: 600px; margin: -25px auto 25px; position: relative; z-index: 10; display: flex; flex-direction: column; gap: 10px; align-items: center; }
 
-        /* 새로 추가된 '내 DB 검색창' (작고 세련되게) */
-        .local-search {
-            width: 60%; max-width: 400px; display: flex; align-items: center;
-            background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(189, 162, 126, 0.5);
-            padding: 6px 15px; border-radius: 20px; backdrop-filter: blur(4px);
-        }
-        .local-search input {
-            flex: 1; border: none; outline: none; background: transparent;
-            font-family: 'Noto Serif KR', serif; font-size: 0.85rem; color: #555;
-        }
-        .local-search input::placeholder { color: #888; }
-        .local-search span { font-size: 0.8rem; color: var(--accent-gold); margin-right: 8px; }
+/* 1. 구글 검색창 */
+.google-search { width: 100%; display: flex; background: white; border-radius: 12px; padding: 10px 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border: 1px solid var(--border-color); }
+.google-search input { flex: 1; border: none; outline: none; font-size: 0.95rem; color: var(--text-main); background: transparent; }
 
-        /* 3. 6개 대륙 메뉴 */
-        nav {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; 
-            max-width: 800px; margin: 0 auto 40px; padding: 0 20px;
-        }
-        .nav-btn {
-            background: transparent; border: none; font-family: 'Noto Serif KR', serif;
-            font-size: 0.95rem; font-weight: 500; color: #7a756d; cursor: pointer; 
-            padding: 5px 10px; transition: 0.3s; border-bottom: 2px solid transparent;
-        }
-        .nav-btn:hover { color: var(--text-dark); }
-        .nav-btn.active { color: var(--text-dark); border-bottom-color: var(--accent-gold); font-weight: 700; }
+/* 2. 내 DB 검색창 (작고 세련되게) */
+.local-search { width: 70%; max-width: 450px; display: flex; align-items: center; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(13, 59, 102, 0.2); padding: 8px 18px; border-radius: 20px; backdrop-filter: blur(5px); transition: 0.3s; }
+.local-search:focus-within { border-color: var(--accent-color); box-shadow: 0 4px 12px rgba(13, 59, 102, 0.1); }
+.local-search input { flex: 1; border: none; outline: none; background: transparent; font-family: 'Noto Sans KR', sans-serif; font-size: 0.85rem; color: var(--text-main); }
+.local-search input::placeholder { color: #aaa; }
+.local-search span { color: var(--accent-color); margin-right: 8px; font-size: 1.1rem; }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+/* 메뉴판 */
+.menu-nav { display: flex; justify-content: center; gap: 30px; padding: 20px; background: white; position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.02); overflow-x: auto; white-space: nowrap; }
+.menu-btn { background: none; border: none; font-size: 0.9rem; font-weight: 500; color: var(--text-muted); cursor: pointer; position: relative; padding: 5px 0; transition: color 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+.menu-btn::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; background-color: var(--accent-color); transition: all 0.3s ease; transform: translateX(-50%); }
+.menu-btn:hover { color: var(--text-main); }
+.menu-btn.active { color: var(--accent-color); font-weight: 700; }
+.menu-btn.active::after { width: 100%; }
 
-        /* 입력 폼 */
-        .editor-card {
-            background: var(--card-slate); border-radius: 4px; padding: 30px; 
-            margin-bottom: 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            border: 1px solid #717c82;
-        }
-        .editor-header {
-            font-family: 'Playfair Display', serif; font-size: 1.5rem; 
-            color: var(--accent-gold); margin-top: 0; margin-bottom: 25px; text-align: center;
-        }
-        .input-row { display: flex; gap: 15px; margin-bottom: 15px; }
-        .editor-card input, .editor-card select, .editor-card textarea {
-            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(234, 221, 207, 0.2);
-            padding: 15px; color: var(--text-cream); font-family: 'Noto Serif KR', serif;
-            font-size: 1rem; outline: none; box-sizing: border-box; transition: 0.3s;
-        }
-        .editor-card select { flex: 1; cursor: pointer; }
-        .editor-card select option { background: var(--card-slate); color: var(--text-cream); }
-        .editor-card input[type="text"] { flex: 3; }
-        .editor-card input:focus, .editor-card select:focus, .editor-card textarea:focus {
-            border-color: var(--accent-gold); background: rgba(255,255,255,0.1);
-        }
-        .editor-card textarea { min-height: 120px; resize: none; overflow-y: hidden; line-height: 1.7; }
-        .editor-card textarea::placeholder, .editor-card input::placeholder { color: rgba(234, 221, 207, 0.4); }
+/* 카드 그리드 */
+.container { max-width: 1100px; margin: 40px auto 0; padding: 0 20px; }
+.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
 
-        .file-box {
-            border: 1px dashed rgba(234, 221, 207, 0.3); padding: 15px; text-align: center; 
-            margin-bottom: 15px; cursor: pointer; color: var(--accent-gold); font-size: 0.9rem; transition: 0.2s;
-        }
-        .file-box:hover { background: rgba(189, 162, 126, 0.1); border-color: var(--accent-gold); }
+.info-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.04); cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+.info-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.08); }
+.card-img-wrap { width: 100%; height: 180px; background: #f4f4f4; overflow: hidden; }
+.card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.info-card:hover .card-img { transform: scale(1.05); }
+.card-body { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+.card-cat { font-size: 0.75rem; font-weight: 700; color: var(--accent-color); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+.card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; line-height: 1.4; color: var(--text-main); word-break: keep-all; }
+.card-preview { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 20px; }
+.card-footer { margin-top: auto; font-size: 0.8rem; color: #adb5bd; border-top: 1px solid var(--border-color); padding-top: 15px; display: flex; justify-content: space-between; }
 
-        .btn-save {
-            width: 100%; background: var(--accent-gold); color: #fff; border: none; padding: 16px;
-            font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.3s;
-        }
-        .btn-save:hover { background: #a68c68; }
+/* 모달 공통 */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26, 26, 26, 0.8); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
+.modal-overlay.open { display: flex; }
+.modal-content { background: white; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; padding: 50px; border-radius: 12px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+.close-btn { position: absolute; top: 25px; right: 30px; font-size: 2rem; cursor: pointer; color: #adb5bd; background: none; border: none; font-weight: 300; transition: color 0.2s; }
+.close-btn:hover { color: var(--text-main); }
 
-        /* 게시판 영역 */
-        .board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; }
-        
-        .post-card {
-            background: var(--card-slate); display: flex; flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid #717c82;
-            transition: transform 0.3s;
-        }
-        .post-card:hover { transform: translateY(-5px); }
+/* 상세 보기 팝업 내용 */
+.detail-cat { font-size: 0.85rem; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; display: block; }
+.detail-title { font-family:'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; margin-bottom: 30px; line-height: 1.3; color: var(--text-main); }
+.detail-img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; margin-bottom: 30px; }
+.detail-text { font-size: 1.05rem; line-height: 1.8; color: #333; white-space: pre-wrap; font-weight: 300; }
+.detail-actions { margin-top: 40px; display: flex; gap: 15px; border-top: 1px solid var(--border-color); padding-top: 25px; }
+.action-btn { background: white; border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; color: var(--text-main); font-weight: 500; transition: 0.2s; }
+.action-btn:hover { background: #f8f9fa; border-color: #ced4da; }
+.action-btn.delete { color: #dc3545; border-color: #f8d7da; background: #fff5f5; }
+.action-btn.delete:hover { background: #dc3545; color: white; }
 
-        .post-actions-top {
-            display: flex; justify-content: flex-end; padding: 10px 15px; gap: 10px;
-            background: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .action-btn {
-            background: transparent; border: 1px solid rgba(234, 221, 207, 0.3); 
-            color: rgba(234, 221, 207, 0.7); padding: 4px 12px; font-size: 0.75rem; 
-            cursor: pointer; font-family: 'Noto Serif KR', serif; transition: 0.2s;
-        }
-        .action-btn:hover { background: var(--accent-gold); color: white; border-color: var(--accent-gold); }
-        .action-btn.del:hover { background: #964242; border-color: #964242; }
-
-        .post-img-slot { width: 100%; height: 220px; background: rgba(0,0,0,0.2); overflow: hidden; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.2); font-size: 0.8rem; }
-        .post-img { width: 100%; height: 100%; object-fit: cover; }
-
-        .post-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
-        .post-meta { font-size: 0.8rem; color: var(--accent-gold); margin-bottom: 10px; font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 1px; }
-        .post-title { font-family: 'Noto Serif KR', serif; font-size: 1.3rem; font-weight: 700; color: var(--text-cream); margin-bottom: 15px; line-height: 1.4; }
-        .post-text { font-size: 0.95rem; line-height: 1.8; color: #d0d5d8; white-space: pre-wrap; flex-grow: 1; margin-bottom: 20px; }
-        .post-date { font-size: 0.8rem; color: rgba(255,255,255,0.4); text-align: right; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
-    </style>
+/* 입력/수정 폼 */
+.form-group { margin-bottom: 25px; }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 1rem; outline: none; background: #fff; transition: border-color 0.2s; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(13, 59, 102, 0.1); }
+.form-group textarea { min-height: 200px; resize: vertical; line-height: 1.6; }
+.save-btn { width: 100%; background: var(--accent-color); color: white; border: none; padding: 16px; border-radius: 6px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
+.save-btn:hover { background: #0a2c4c; }
+</style>
 </head>
 <body>
 
-    <div class="hero-section" id="heroBg">
-        <label class="hero-overlay-btn">
-            배경 변경
-            <input type="file" id="heroInput" hidden accept="image/*">
-        </label>
-        <h1 class="hero-title">ANNALS</h1>
-        <div class="hero-subtitle">Chronicles of the Continents</div>
+<header class="site-header">
+  <h1 class="site-title">INSIGHTS VAULT</h1>
+  <p class="site-subtitle">퀀트 투자, 수학, 그리고 인물에 관한 깊이 있는 기록. 카드를 클릭하여 원문과 통찰을 확인하세요.</p>
+  <button class="btn-new" onclick="openForm()">+ 새 인사이트 기록하기</button>
+</header>
+
+<div class="search-container">
+  <div class="google-search">
+    <form action="https://www.google.com/search" method="GET" target="_blank" style="width:100%; display:flex; align-items:center;">
+      <span style="color:#aaa; margin-right:8px; font-size:1.1rem;">🔍</span>
+      <input type="text" name="q" placeholder="구글 지식 검색...">
+    </form>
+  </div>
+  
+  <div class="local-search">
+    <span>⚲</span>
+    <input type="text" id="localSearchInput" placeholder="내 인사이트 안에서 키워드 찾기..." onkeyup="filterRecords()">
+  </div>
+</div>
+
+<nav class="menu-nav">
+  <button class="menu-btn active" onclick="setFilter('전체', this)">All</button>
+  <button class="menu-btn" onclick="setFilter('Finance', this)">Finance</button>
+  <button class="menu-btn" onclick="setFilter('Tech', this)">Tech & System</button>
+  <button class="menu-btn" onclick="setFilter('People', this)">People</button>
+  <button class="menu-btn" onclick="setFilter('Math', this)">Mathematics</button>
+</nav>
+
+<main class="container">
+  <div class="grid-container" id="gridContainer">
     </div>
+</main>
 
-    <div class="search-container">
-        <div class="google-search">
-            <form action="https://www.google.com/search" method="GET" target="_blank" style="width:100%; display:flex; align-items:center;">
-                <input type="text" name="q" placeholder="역사적 사실을 구글에서 검색하세요...">
-                <button type="submit">🔍</button>
-            </form>
-        </div>
-        
-        <div class="local-search">
-            <span>⚲</span>
-            <input type="text" id="localSearchInput" placeholder="내 기록 안에서 키워드 찾기..." onkeyup="filterRecords()">
-        </div>
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('detailModal')">×</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="formModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('formModal')">×</button>
+    <h2 id="formTitle" style="font-family:'Playfair Display', serif; margin-bottom: 30px; color: var(--accent-color);">Add Insight</h2>
+    
+    <div class="form-group">
+      <label>제목</label>
+      <input type="text" id="f-title" placeholder="인사이트의 핵심을 적어주세요">
     </div>
-
-    <nav>
-        <button class="nav-btn active" onclick="setFilter('전체', this)">전체보기</button>
-        <button class="nav-btn" onclick="setFilter('아시아', this)">아시아</button>
-        <button class="nav-btn" onclick="setFilter('유럽', this)">유럽</button>
-        <button class="nav-btn" onclick="setFilter('아프리카', this)">아프리카</button>
-        <button class="nav-btn" onclick="setFilter('북아메리카', this)">북아메리카</button>
-        <button class="nav-btn" onclick="setFilter('남아메리카', this)">남아메리카</button>
-        <button class="nav-btn" onclick="setFilter('오세아니아', this)">오세아니아</button>
-    </nav>
-
-    <div class="container">
-        <div class="editor-card">
-            <h2 class="editor-header">Add a Record</h2>
-            <div class="input-row">
-                <select id="postContinent">
-                    <option value="아시아">아시아</option>
-                    <option value="유럽">유럽</option>
-                    <option value="아프리카">아프리카</option>
-                    <option value="북아메리카">북아메리카</option>
-                    <option value="남아메리카">남아메리카</option>
-                    <option value="오세아니아">오세아니아</option>
-                </select>
-                <input type="text" id="postTitle" placeholder="기록의 제목을 입력하세요">
-            </div>
-
-            <div class="file-box" onclick="document.getElementById('postFileInput').click()" id="fileBoxText">
-                + 관련 역사 사진 또는 문서 첨부
-            </div>
-            <input type="file" id="postFileInput" hidden accept="image/*">
-            
-            <textarea id="postContent" placeholder="상세한 역사적 기록을 남겨주세요..." oninput="autoResize(this)"></textarea>
-            
-            <button class="btn-save" onclick="saveRecord()">기록 보존하기</button>
-        </div>
-
-        <div class="board-grid" id="boardGrid">
-            </div>
+    <div class="form-group">
+      <label>카테고리</label>
+      <select id="f-category">
+        <option value="Finance">Finance</option>
+        <option value="Tech">Tech & System</option>
+        <option value="People">People</option>
+        <option value="Math">Mathematics</option>
+      </select>
     </div>
+    <div class="form-group">
+      <label>관련 이미지 URL (선택)</label>
+      <input type="text" id="f-img" placeholder="http://...">
+    </div>
+    <div class="form-group">
+      <label>상세 내용 (원문 및 감상)</label>
+      <textarea id="f-content" placeholder="텍스트를 자유롭게 입력하세요..."></textarea>
+    </div>
+    <button class="save-btn" onclick="handleSave()">기록 저장하기</button>
+  </div>
+</div>
 
-    <script>
-        let currentFilter = '전체'; 
-        let selectedImg = "";
-        let editIndex = -1;
+<script>
+const defaultPosts = [
+  { id: 1, category: "Finance", title: "메달리온 펀드의 압도적 성과", img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80", content: "같은 기간 S&P 500에 100달러를 넣었다면 약 1,815달러에 그쳤다는 점에서, 메달리온 펀드의 성과가 얼마나 압도적인지 극명하게 드러남.\n\n닷컴 버블 붕괴 시기에도 56.6%, 글로벌 금융위기 당시에도 74.6%의 수익률을 기록하며 단 한 번도 마이너스 연간 수익률을 낸 적이 없는 것으로 알려져 있음.", date: "2026. 02. 23" },
+  { id: 2, category: "Tech", title: "철저한 비밀주의와 자동화", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80", content: "6. 메달리온 펀드가 외부 투자자에게 완전히 폐쇄되어 있다는 점도 특이할 만함.\n\n1993년 이후 임직원 자금만 운용하는 내부 전용 펀드로 전환됐으며, 이는 수익을 외부와 나누지 않겠다는 것이기도 하지만 동시에 알고리즘의 비밀 유지를 위한 조치이기도 함.\n\n모든 임직원은 철저한 비밀유지협약(NDA)에 서명하며, 회사 전체가 완전한 보안 속에서 운영됨. 르네상스는 하루 15만~30만 건의 거래를 완전 자동화 시스템으로 처리하며, 이는 감정적 판단을 원천적으로 제거한 구조임.", date: "2026. 02. 23" },
+  { id: 3, category: "People", title: "이공계 박사 중심의 채용 방식", img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80", content: "7. 르네상스가 월스트리트의 여타 금융회사들과 가장 크게 다른 점 중 하나는 채용 방식임.\n\n금융 경력자보다 수학, 물리학, 통계학, 컴퓨터과학 분야의 박사급 연구자를 집중 채용하며, 재직자의 절반 이상이 이공계 박사임.\n\n사이먼스 본인도 '수학자였다는 것이 누가 뛰어난지 알아보는 능력을 줬다'고 밝힌 바 있으며, 이는 곧 인재 선별 능력 자체가 퀀트 전략의 근간이었다는 의미임.", date: "2026. 02. 23" },
+  { id: 4, category: "People", title: "James H. Simons, PhD", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80", content: "James H. Simons, PhD, is chairman of the Simons Foundation, an organization dedicated to advancing the frontiers of research in mathematics and the basic sciences...\n\nSimons founded Renaissance Technologies LLC, a highly quantitative investment firm, from which he retired in 2009, after serving as its chief executive officer for more than thirty years. Previously, he was chair of the Mathematics Department at the State University of New York at Stony Brook.\n\nSimons earned a BS in mathematics from the Massachusetts Institute of Technology and a PhD in mathematics from the University of California, Berkeley. His scientific research was in the area of geometry and topology.", date: "2026. 02. 23" },
+  { id: 5, category: "Math", title: "Using Mathematics to Make Money", img: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80", content: "In September 2022, James Simons spoke with members of the Journal of Investment Consulting editorial board about how his experience as a mathematician prepared him for success in the financial world...\n\nEdward Baker: You were an extremely successful mathematician... Has your deep training in mathematics helped you? Or has that just been interesting but superfluous to your success in finance?\n\nJames Simons: Well, as you know, Renaissance is very quantitative, and the fact that I was a mathematician was somewhat helpful. It gave me the ability to tell who was good and who wasn't.\n\nEdward Baker: In terms of your employees, you mean?\n\nJames Simons: Yes. The work with Chern was amazing, because what's called Chern-Simons theory is now embedded in physics.", date: "2026. 02. 23" }
+];
 
-        document.getElementById('heroInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    document.getElementById('heroBg').style.backgroundImage = `url(${ev.target.result})`;
-                    localStorage.setItem('annals_hero_bg', ev.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+let posts = JSON.parse(localStorage.getItem('insights_vault_data'));
+if (!posts || posts.length === 0) {
+    posts = defaultPosts;
+    localStorage.setItem('insights_vault_data', JSON.stringify(posts));
+}
 
-        function autoResize(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
+let currentEditId = null;
+let currentFilter = '전체';
+
+// 💡 실시간 검색 필터 트리거
+function filterRecords() {
+    renderGrid();
+}
+
+// 그리드 렌더링 (검색어 + 카테고리 교차 필터 적용)
+function renderGrid() {
+    const grid = document.getElementById('gridContainer');
+    grid.innerHTML = '';
+    
+    // 사용자가 입력한 검색어 가져오기
+    const searchQuery = document.getElementById('localSearchInput').value.toLowerCase();
+    
+    posts.forEach(p => {
+        // 1차: 카테고리 필터
+        if (currentFilter !== '전체' && p.category !== currentFilter) return;
+
+        // 2차: 검색어 필터 (제목 또는 내용에 포함되어 있는지 확인)
+        if (searchQuery) {
+            const titleMatch = p.title.toLowerCase().includes(searchQuery);
+            const contentMatch = p.content.toLowerCase().includes(searchQuery);
+            if (!titleMatch && !contentMatch) return; // 포함되지 않으면 그리지 않음
         }
 
-        document.getElementById('postFileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = (ev) => { 
-                    selectedImg = ev.target.result; 
-                    document.getElementById('fileBoxText').innerHTML = "✔️ 이미지 첨부 완료 (클릭 시 교체)";
-                    document.getElementById('fileBoxText').style.borderColor = "var(--accent-gold)";
-                    document.getElementById('fileBoxText').style.color = "var(--text-cream)";
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // 💡 혁신 1단계: 검색어와 대륙 메뉴를 동시에 고려하는 필터 함수
-        function filterRecords() {
-            renderRecords(); 
-        }
-
-        function setFilter(continent, btnElement) {
-            currentFilter = continent;
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
-            renderRecords();
-        }
-
-        function saveRecord() {
-            const title = document.getElementById('postTitle').value;
-            const content = document.getElementById('postContent').value;
-            const continent = document.getElementById('postContinent').value; 
-            
-            if(!title || !content) { alert("제목과 내용을 입력해주세요."); return; }
-
-            const records = JSON.parse(localStorage.getItem('annals_history_data') || '[]');
-            const today = new Date();
-            const dateStr = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
-
-            const data = { continent, title, content, img: selectedImg, date: dateStr };
-
-            if(editIndex > -1) { records[editIndex] = data; editIndex = -1; }
-            else { records.unshift(data); }
-
-            localStorage.setItem('annals_history_data', JSON.stringify(records));
-            resetForm();
-            renderRecords();
-        }
-
-        function resetForm() {
-            document.getElementById('postTitle').value = '';
-            const contentBox = document.getElementById('postContent');
-            contentBox.value = ''; contentBox.style.height = '120px'; 
-            document.getElementById('postContinent').value = '아시아'; 
-            selectedImg = "";
-            document.getElementById('fileBoxText').innerHTML = "+ 관련 역사 사진 또는 문서 첨부";
-            document.getElementById('fileBoxText').style.borderColor = "rgba(234, 221, 207, 0.3)";
-            document.getElementById('fileBoxText').style.color = "var(--accent-gold)";
-        }
-
-        function editRecord(index) {
-            const records = JSON.parse(localStorage.getItem('annals_history_data') || '[]');
-            const r = records[index];
-            document.getElementById('postTitle').value = r.title;
-            document.getElementById('postContinent').value = r.continent; 
-            
-            const contentBox = document.getElementById('postContent');
-            contentBox.value = r.content;
-            autoResize(contentBox); 
-            
-            selectedImg = r.img || "";
-            if(r.img) {
-                document.getElementById('fileBoxText').innerHTML = "✔️ 기존 이미지 유지 (클릭 시 교체)";
-                document.getElementById('fileBoxText').style.color = "var(--text-cream)";
-            } else {
-                document.getElementById('fileBoxText').innerHTML = "+ 관련 역사 사진 또는 문서 첨부";
-            }
-            editIndex = index;
-            window.scrollTo({top: 400, behavior: 'smooth'});
-        }
-
-        function deleteRecord(index) {
-            if(confirm("이 역사적 기록을 정말 삭제하시겠습니까?")) {
-                const records = JSON.parse(localStorage.getItem('annals_history_data') || '[]');
-                records.splice(index, 1);
-                localStorage.setItem('annals_history_data', JSON.stringify(records));
-                renderRecords();
-            }
-        }
-
-        function renderRecords() {
-            const board = document.getElementById('boardGrid'); 
-            board.innerHTML = '';
-            const records = JSON.parse(localStorage.getItem('annals_history_data') || '[]');
-            
-            // 사용자가 입력한 검색어 가져오기
-            const searchQuery = document.getElementById('localSearchInput').value.toLowerCase();
-            
-            records.forEach((r, index) => {
-                // 1차 필터: 대륙 메뉴
-                if(currentFilter !== '전체' && r.continent !== currentFilter) return;
-                
-                // 2차 필터: 검색어 (제목이나 내용에 검색어가 포함되어 있는지 확인)
-                if(searchQuery) {
-                    const titleMatch = r.title.toLowerCase().includes(searchQuery);
-                    const contentMatch = r.content.toLowerCase().includes(searchQuery);
-                    if(!titleMatch && !contentMatch) return; // 포함되지 않으면 그리지 않음
-                }
-                
-                const card = document.createElement('div');
-                card.className = 'post-card';
-                card.innerHTML = `
-                    <div class="post-actions-top">
-                        <button class="action-btn" onclick="editRecord(${index})">Edit</button>
-                        <button class="action-btn del" onclick="deleteRecord(${index})">Delete</button>
-                    </div>
-                    <div class="post-img-slot">
-                        ${r.img ? `<img src="${r.img}" class="post-img" onclick="window.open(this.src)">` : 'No Image Recorded'}
-                    </div>
-                    <div class="post-content">
-                        <div class="post-meta">${r.continent}</div>
-                        <div class="post-title">${r.title}</div>
-                        <div class="post-text">${r.content}</div>
-                        <div class="post-date">${r.date}</div>
-                    </div>
-                `;
-                board.appendChild(card);
-            });
-        }
+        const imgHtml = p.img ? `<div class="card-img-wrap"><img src="${p.img}" class="card-img" alt="cover"></div>` : '';
         
-        const savedHero = localStorage.getItem('annals_hero_bg');
-        if(savedHero) document.getElementById('heroBg').style.backgroundImage = `url(${savedHero})`;
+        grid.innerHTML += `
+            <div class="info-card" onclick="openDetail(${p.id})">
+                ${imgHtml}
+                <div class="card-body">
+                    <span class="card-cat">${p.category}</span>
+                    <h3 class="card-title">${p.title}</h3>
+                    <p class="card-preview">${p.content}</p>
+                    <div class="card-footer">
+                        <span>Read More ➔</span>
+                        <span>${p.date}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function setFilter(cat, btnElement) {
+    currentFilter = cat;
+    document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+    renderGrid();
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = 'auto'; }
+
+function openDetail(id) {
+    const p = posts.find(item => item.id === id);
+    if(!p) return;
+    
+    const content = document.getElementById('detailContent');
+    const imgHtml = p.img ? `<img src="${p.img}" class="detail-img">` : '';
+
+    content.innerHTML = `
+        <span class="detail-cat">${p.category}</span>
+        <h2 class="detail-title">${p.title}</h2>
+        ${imgHtml}
+        <div class="detail-text">${p.content}</div>
         
-        renderRecords();
-    </script>
+        <div class="detail-actions">
+            <button class="action-btn" onclick="openForm(${p.id})">Edit Insight</button>
+            <button class="action-btn delete" onclick="deletePost(${p.id})">Delete</button>
+        </div>
+    `;
+    
+    openModal('detailModal');
+}
+
+function openForm(id = null) {
+    currentEditId = id;
+    if(id) {
+        closeModal('detailModal');
+        const p = posts.find(item => item.id === id);
+        document.getElementById('f-title').value = p.title;
+        document.getElementById('f-category').value = p.category;
+        document.getElementById('f-img').value = p.img || '';
+        document.getElementById('f-content').value = p.content;
+        document.getElementById('formTitle').innerText = "Edit Insight";
+    } else {
+        document.getElementById('f-title').value = '';
+        document.getElementById('f-category').value = 'Finance';
+        document.getElementById('f-img').value = '';
+        document.getElementById('f-content').value = '';
+        document.getElementById('formTitle').innerText = "Add Insight";
+    }
+    openModal('formModal');
+}
+
+function handleSave() {
+    const title = document.getElementById('f-title').value;
+    const category = document.getElementById('f-category').value;
+    const img = document.getElementById('f-img').value;
+    const content = document.getElementById('f-content').value;
+
+    if(!title || !content) return alert("제목과 내용은 필수입니다.");
+
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}. ${String(today.getMonth()+1).padStart(2,'0')}. ${String(today.getDate()).padStart(2,'0')}`;
+
+    const data = { id: currentEditId || Date.now(), category, title, img, content, date: dateStr };
+
+    if(currentEditId) {
+        const idx = posts.findIndex(p => p.id === currentEditId);
+        posts[idx] = data;
+    } else {
+        posts.unshift(data);
+    }
+    
+    localStorage.setItem('insights_vault_data', JSON.stringify(posts));
+    renderGrid();
+    closeModal('formModal');
+    if(currentEditId) openDetail(currentEditId); 
+}
+
+function deletePost(id) {
+    if(!confirm("이 기록을 삭제하시겠습니까?")) return;
+    posts = posts.filter(p => p.id !== id);
+    localStorage.setItem('insights_vault_data', JSON.stringify(posts));
+    closeModal('detailModal');
+    renderGrid();
+}
+
+renderGrid();
+</script>
 </body>
 </html>
