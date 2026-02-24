@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Insights Vault - Quant & Finance</title>
+<title>Knowledge Vault - Premium</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -18,30 +18,30 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 80px; }
 
-/* 헤더 & 프로필 영역 */
+/* 헤더 */
 .site-header { text-align: center; padding: 60px 20px 30px; background: white; border-bottom: 1px solid var(--border-color); }
 .site-title { font-family:'Playfair Display', serif; font-size: 2.8rem; font-weight:700; color: var(--accent-color); margin-bottom: 10px; letter-spacing: -0.5px; }
 .site-subtitle { font-size: 0.95rem; color: var(--text-muted); font-weight: 300; max-width: 600px; margin: 0 auto 25px; line-height: 1.6; }
 .btn-new { background: var(--accent-color); color: white; border: none; padding: 10px 28px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.5px; transition: 0.3s; }
 .btn-new:hover { background: #0a2c4c; box-shadow: 0 4px 12px rgba(13, 59, 102, 0.2); }
 
-/* 💡 혁신된 통합 검색 컨테이너 */
+/* 검색 컨테이너 */
 .search-container { width: 92%; max-width: 600px; margin: -25px auto 25px; position: relative; z-index: 10; display: flex; flex-direction: column; gap: 10px; align-items: center; }
 
 /* 1. 구글 검색창 */
 .google-search { width: 100%; display: flex; background: white; border-radius: 12px; padding: 10px 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border: 1px solid var(--border-color); }
 .google-search input { flex: 1; border: none; outline: none; font-size: 0.95rem; color: var(--text-main); background: transparent; }
 
-/* 2. 내 DB 검색창 (작고 세련되게) */
+/* 2. 내 DB 검색창 (엔터키 작동) */
 .local-search { width: 70%; max-width: 450px; display: flex; align-items: center; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(13, 59, 102, 0.2); padding: 8px 18px; border-radius: 20px; backdrop-filter: blur(5px); transition: 0.3s; }
 .local-search:focus-within { border-color: var(--accent-color); box-shadow: 0 4px 12px rgba(13, 59, 102, 0.1); }
 .local-search input { flex: 1; border: none; outline: none; background: transparent; font-family: 'Noto Sans KR', sans-serif; font-size: 0.85rem; color: var(--text-main); }
 .local-search input::placeholder { color: #aaa; }
 .local-search span { color: var(--accent-color); margin-right: 8px; font-size: 1.1rem; }
 
-/* 메뉴판 */
-.menu-nav { display: flex; justify-content: center; gap: 30px; padding: 20px; background: white; position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.02); overflow-x: auto; white-space: nowrap; }
-.menu-btn { background: none; border: none; font-size: 0.9rem; font-weight: 500; color: var(--text-muted); cursor: pointer; position: relative; padding: 5px 0; transition: color 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+/* 오리지널 메뉴판 */
+.menu-nav { display: flex; justify-content: center; gap: 20px; padding: 20px; background: white; position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.02); overflow-x: auto; white-space: nowrap; }
+.menu-btn { background: none; border: none; font-size: 0.9rem; font-weight: 500; color: var(--text-muted); cursor: pointer; position: relative; padding: 5px 0; transition: color 0.3s; letter-spacing: 0.5px; }
 .menu-btn::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; background-color: var(--accent-color); transition: all 0.3s ease; transform: translateX(-50%); }
 .menu-btn:hover { color: var(--text-main); }
 .menu-btn.active { color: var(--accent-color); font-weight: 700; }
@@ -57,7 +57,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-color); col
 .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
 .info-card:hover .card-img { transform: scale(1.05); }
 .card-body { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
-.card-cat { font-size: 0.75rem; font-weight: 700; color: var(--accent-color); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+.card-cat { font-size: 0.75rem; font-weight: 700; color: var(--accent-color); margin-bottom: 10px; letter-spacing: 1px; }
 .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; line-height: 1.4; color: var(--text-main); word-break: keep-all; }
 .card-preview { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 20px; }
 .card-footer { margin-top: auto; font-size: 0.8rem; color: #adb5bd; border-top: 1px solid var(--border-color); padding-top: 15px; display: flex; justify-content: space-between; }
@@ -69,8 +69,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-color); col
 .close-btn { position: absolute; top: 25px; right: 30px; font-size: 2rem; cursor: pointer; color: #adb5bd; background: none; border: none; font-weight: 300; transition: color 0.2s; }
 .close-btn:hover { color: var(--text-main); }
 
-/* 상세 보기 팝업 내용 */
-.detail-cat { font-size: 0.85rem; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; display: block; }
+/* 상세 보기 팝업 */
+.detail-cat { font-size: 0.85rem; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; margin-bottom: 15px; display: block; }
 .detail-title { font-family:'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; margin-bottom: 30px; line-height: 1.3; color: var(--text-main); }
 .detail-img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; margin-bottom: 30px; }
 .detail-text { font-size: 1.05rem; line-height: 1.8; color: #333; white-space: pre-wrap; font-weight: 300; }
@@ -80,7 +80,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-color); col
 .action-btn.delete { color: #dc3545; border-color: #f8d7da; background: #fff5f5; }
 .action-btn.delete:hover { background: #dc3545; color: white; }
 
-/* 입력/수정 폼 */
+/* 폼 모달 */
 .form-group { margin-bottom: 25px; }
 .form-group label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; }
 .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 1rem; outline: none; background: #fff; transition: border-color 0.2s; }
@@ -93,9 +93,9 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-color); col
 <body>
 
 <header class="site-header">
-  <h1 class="site-title">INSIGHTS VAULT</h1>
-  <p class="site-subtitle">퀀트 투자, 수학, 그리고 인물에 관한 깊이 있는 기록. 카드를 클릭하여 원문과 통찰을 확인하세요.</p>
-  <button class="btn-new" onclick="openForm()">+ 새 인사이트 기록하기</button>
+  <h1 class="site-title">KNOWLEDGE VAULT</h1>
+  <p class="site-subtitle">나만의 지식과 통찰을 보관하는 프라이빗 데이터베이스입니다.</p>
+  <button class="btn-new" onclick="openForm()">+ 새 지식 기록하기</button>
 </header>
 
 <div class="search-container">
@@ -108,16 +108,17 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-color); col
   
   <div class="local-search">
     <span>⚲</span>
-    <input type="text" id="localSearchInput" placeholder="내 인사이트 안에서 키워드 찾기..." onkeyup="filterRecords()">
+    <input type="text" id="localSearchInput" placeholder="내 기록 안에서 검색 (입력 후 엔터)">
   </div>
 </div>
 
 <nav class="menu-nav">
   <button class="menu-btn active" onclick="setFilter('전체', this)">All</button>
-  <button class="menu-btn" onclick="setFilter('Finance', this)">Finance</button>
-  <button class="menu-btn" onclick="setFilter('Tech', this)">Tech & System</button>
-  <button class="menu-btn" onclick="setFilter('People', this)">People</button>
-  <button class="menu-btn" onclick="setFilter('Math', this)">Mathematics</button>
+  <button class="menu-btn" onclick="setFilter('의학', this)">의학</button>
+  <button class="menu-btn" onclick="setFilter('시사', this)">시사</button>
+  <button class="menu-btn" onclick="setFilter('과학', this)">과학</button>
+  <button class="menu-btn" onclick="setFilter('인물', this)">인물</button>
+  <button class="menu-btn" onclick="setFilter('New Fields', this)">New Fields</button>
 </nav>
 
 <main class="container">
@@ -135,19 +136,20 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-color); col
 <div class="modal-overlay" id="formModal">
   <div class="modal-content">
     <button class="close-btn" onclick="closeModal('formModal')">×</button>
-    <h2 id="formTitle" style="font-family:'Playfair Display', serif; margin-bottom: 30px; color: var(--accent-color);">Add Insight</h2>
+    <h2 id="formTitle" style="font-family:'Playfair Display', serif; margin-bottom: 30px; color: var(--accent-color);">Add Knowledge</h2>
     
     <div class="form-group">
       <label>제목</label>
-      <input type="text" id="f-title" placeholder="인사이트의 핵심을 적어주세요">
+      <input type="text" id="f-title" placeholder="기록의 핵심 제목을 적어주세요">
     </div>
     <div class="form-group">
       <label>카테고리</label>
       <select id="f-category">
-        <option value="Finance">Finance</option>
-        <option value="Tech">Tech & System</option>
-        <option value="People">People</option>
-        <option value="Math">Mathematics</option>
+        <option value="의학">의학</option>
+        <option value="시사">시사</option>
+        <option value="과학">과학</option>
+        <option value="인물">인물</option>
+        <option value="New Fields">New Fields</option>
       </select>
     </div>
     <div class="form-group">
@@ -163,29 +165,18 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-color); col
 </div>
 
 <script>
-const defaultPosts = [
-  { id: 1, category: "Finance", title: "메달리온 펀드의 압도적 성과", img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80", content: "같은 기간 S&P 500에 100달러를 넣었다면 약 1,815달러에 그쳤다는 점에서, 메달리온 펀드의 성과가 얼마나 압도적인지 극명하게 드러남.\n\n닷컴 버블 붕괴 시기에도 56.6%, 글로벌 금융위기 당시에도 74.6%의 수익률을 기록하며 단 한 번도 마이너스 연간 수익률을 낸 적이 없는 것으로 알려져 있음.", date: "2026. 02. 23" },
-  { id: 2, category: "Tech", title: "철저한 비밀주의와 자동화", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80", content: "6. 메달리온 펀드가 외부 투자자에게 완전히 폐쇄되어 있다는 점도 특이할 만함.\n\n1993년 이후 임직원 자금만 운용하는 내부 전용 펀드로 전환됐으며, 이는 수익을 외부와 나누지 않겠다는 것이기도 하지만 동시에 알고리즘의 비밀 유지를 위한 조치이기도 함.\n\n모든 임직원은 철저한 비밀유지협약(NDA)에 서명하며, 회사 전체가 완전한 보안 속에서 운영됨. 르네상스는 하루 15만~30만 건의 거래를 완전 자동화 시스템으로 처리하며, 이는 감정적 판단을 원천적으로 제거한 구조임.", date: "2026. 02. 23" },
-  { id: 3, category: "People", title: "이공계 박사 중심의 채용 방식", img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80", content: "7. 르네상스가 월스트리트의 여타 금융회사들과 가장 크게 다른 점 중 하나는 채용 방식임.\n\n금융 경력자보다 수학, 물리학, 통계학, 컴퓨터과학 분야의 박사급 연구자를 집중 채용하며, 재직자의 절반 이상이 이공계 박사임.\n\n사이먼스 본인도 '수학자였다는 것이 누가 뛰어난지 알아보는 능력을 줬다'고 밝힌 바 있으며, 이는 곧 인재 선별 능력 자체가 퀀트 전략의 근간이었다는 의미임.", date: "2026. 02. 23" },
-  { id: 4, category: "People", title: "James H. Simons, PhD", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80", content: "James H. Simons, PhD, is chairman of the Simons Foundation, an organization dedicated to advancing the frontiers of research in mathematics and the basic sciences...\n\nSimons founded Renaissance Technologies LLC, a highly quantitative investment firm, from which he retired in 2009, after serving as its chief executive officer for more than thirty years. Previously, he was chair of the Mathematics Department at the State University of New York at Stony Brook.\n\nSimons earned a BS in mathematics from the Massachusetts Institute of Technology and a PhD in mathematics from the University of California, Berkeley. His scientific research was in the area of geometry and topology.", date: "2026. 02. 23" },
-  { id: 5, category: "Math", title: "Using Mathematics to Make Money", img: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80", content: "In September 2022, James Simons spoke with members of the Journal of Investment Consulting editorial board about how his experience as a mathematician prepared him for success in the financial world...\n\nEdward Baker: You were an extremely successful mathematician... Has your deep training in mathematics helped you? Or has that just been interesting but superfluous to your success in finance?\n\nJames Simons: Well, as you know, Renaissance is very quantitative, and the fact that I was a mathematician was somewhat helpful. It gave me the ability to tell who was good and who wasn't.\n\nEdward Baker: In terms of your employees, you mean?\n\nJames Simons: Yes. The work with Chern was amazing, because what's called Chern-Simons theory is now embedded in physics.", date: "2026. 02. 23" }
-];
-
-let posts = JSON.parse(localStorage.getItem('insights_vault_data'));
-if (!posts || posts.length === 0) {
-    posts = defaultPosts;
-    localStorage.setItem('insights_vault_data', JSON.stringify(posts));
-}
-
+let posts = JSON.parse(localStorage.getItem('my_study_vault_data') || '[]');
 let currentEditId = null;
 let currentFilter = '전체';
 
-// 💡 실시간 검색 필터 트리거
-function filterRecords() {
-    renderGrid();
-}
+// 💡 엔터키 검색 이벤트 리스너 추가
+document.getElementById('localSearchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // 기본 폼 제출 방지
+        renderGrid(); // 엔터 칠 때만 검색 실행
+    }
+});
 
-// 그리드 렌더링 (검색어 + 카테고리 교차 필터 적용)
 function renderGrid() {
     const grid = document.getElementById('gridContainer');
     grid.innerHTML = '';
@@ -197,7 +188,7 @@ function renderGrid() {
         // 1차: 카테고리 필터
         if (currentFilter !== '전체' && p.category !== currentFilter) return;
 
-        // 2차: 검색어 필터 (제목 또는 내용에 포함되어 있는지 확인)
+        // 2차: 검색어 필터 (제목 또는 내용에 포함)
         if (searchQuery) {
             const titleMatch = p.title.toLowerCase().includes(searchQuery);
             const contentMatch = p.content.toLowerCase().includes(searchQuery);
@@ -227,6 +218,10 @@ function setFilter(cat, btnElement) {
     currentFilter = cat;
     document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
     btnElement.classList.add('active');
+    
+    // 탭을 바꿀 때는 검색어를 초기화하고 싶다면 아래 주석을 해제하세요
+    // document.getElementById('localSearchInput').value = '';
+    
     renderGrid();
 }
 
@@ -264,13 +259,13 @@ function openForm(id = null) {
         document.getElementById('f-category').value = p.category;
         document.getElementById('f-img').value = p.img || '';
         document.getElementById('f-content').value = p.content;
-        document.getElementById('formTitle').innerText = "Edit Insight";
+        document.getElementById('formTitle').innerText = "Edit Knowledge";
     } else {
         document.getElementById('f-title').value = '';
-        document.getElementById('f-category').value = 'Finance';
+        document.getElementById('f-category').value = '의학';
         document.getElementById('f-img').value = '';
         document.getElementById('f-content').value = '';
-        document.getElementById('formTitle').innerText = "Add Insight";
+        document.getElementById('formTitle').innerText = "Add Knowledge";
     }
     openModal('formModal');
 }
@@ -295,7 +290,7 @@ function handleSave() {
         posts.unshift(data);
     }
     
-    localStorage.setItem('insights_vault_data', JSON.stringify(posts));
+    localStorage.setItem('my_study_vault_data', JSON.stringify(posts));
     renderGrid();
     closeModal('formModal');
     if(currentEditId) openDetail(currentEditId); 
@@ -304,7 +299,7 @@ function handleSave() {
 function deletePost(id) {
     if(!confirm("이 기록을 삭제하시겠습니까?")) return;
     posts = posts.filter(p => p.id !== id);
-    localStorage.setItem('insights_vault_data', JSON.stringify(posts));
+    localStorage.setItem('my_study_vault_data', JSON.stringify(posts));
     closeModal('detailModal');
     renderGrid();
 }
