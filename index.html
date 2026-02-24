@@ -32,7 +32,7 @@
             backdrop-filter: blur(4px); transition: 0.2s;
         }
         
-        /* 💡 수정된 검색 영역 (구글 + 내 DB) */
+        /* 검색 영역 (구글 + 내 DB) */
         .search-area { 
             width: 92%; max-width: 600px; margin: -25px auto 15px; position: relative; z-index: 10; 
             display: flex; flex-direction: column; gap: 10px; align-items: center;
@@ -43,16 +43,23 @@
         }
         .google-search input { flex: 1; border: none; outline: none; font-size: 0.95rem; color: var(--text-main); background: transparent; }
         
-        /* 새로 추가된 내 DB 검색창 */
+        /* 💡 수정된 내 DB 검색창 (돋보기 버튼 추가) */
         .local-search { 
-            width: 70%; max-width: 450px; display: flex; align-items: center; 
+            width: 75%; max-width: 450px; display: flex; align-items: center; 
             background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(195, 104, 57, 0.3); 
-            padding: 8px 18px; border-radius: 20px; backdrop-filter: blur(5px); transition: 0.3s; 
+            padding: 8px 18px; border-radius: 25px; backdrop-filter: blur(5px); transition: 0.3s; 
         }
-        .local-search:focus-within { border-color: var(--point-color); box-shadow: 0 4px 12px rgba(195, 104, 57, 0.1); }
-        .local-search input { flex: 1; border: none; outline: none; background: transparent; font-family: inherit; font-size: 0.85rem; color: var(--text-main); }
+        .local-search:focus-within { border-color: var(--point-color); box-shadow: 0 4px 12px rgba(195, 104, 57, 0.15); background: #fff; }
+        .local-search input { flex: 1; border: none; outline: none; background: transparent; font-family: inherit; font-size: 0.9rem; color: var(--text-main); }
         .local-search input::placeholder { color: #aaa; }
-        .local-search span { color: var(--point-color); margin-right: 8px; font-size: 1.1rem; }
+        .local-search .icon-left { color: var(--point-color); margin-right: 8px; font-size: 1rem; }
+        
+        /* 💡 돋보기 버튼 스타일 */
+        .local-search-btn {
+            background: none; border: none; cursor: pointer; font-size: 1.1rem;
+            margin-left: 5px; padding: 0; transition: transform 0.2s;
+        }
+        .local-search-btn:hover { transform: scale(1.15); }
 
         /* 상단 메뉴 */
         nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 10px 15px 20px; max-width: 600px; margin: 0 auto; }
@@ -90,17 +97,24 @@
         
         .editor-card input:focus, .editor-card textarea:focus, .editor-card select:focus { border-color: var(--point-color); background: #fff; }
         
-        /* 파일 박스 */
         .file-box { border: 1px dashed #d0d0d0; padding: 16px; text-align: center; border-radius: 8px; margin-bottom: 12px; cursor: pointer; color: var(--text-sub); font-size: 0.9rem; background: #fafafa; transition: 0.2s; }
         .file-box:hover { border-color: var(--point-color); color: var(--point-color); background: #fffaf7; }
 
         .main-btn { width: 100%; padding: 16px; border: none; border-radius: 8px; background: var(--point-color); color: white; font-weight: 600; cursor: pointer; font-size: 1.05rem; }
 
         /* 게시판 리스트 */
+        #board { scroll-margin-top: 20px; }
+        
+        /* 💡 검색 결과 없음 메시지 스타일 */
+        .no-results {
+            text-align: center; padding: 40px 20px; background: var(--card-bg); 
+            border: 1px dashed var(--point-color); color: var(--text-sub); 
+            border-radius: 12px; font-size: 1.05rem;
+        }
+
         .post-card { background: var(--card-bg); border-radius: 16px; margin-bottom: 20px; padding: 20px; display: flex; gap: 20px; position: relative; border: 1px solid #eaeaea; }
         .post-thumb { width: 110px; height: 110px; border-radius: 10px; object-fit: cover; flex-shrink: 0; cursor: pointer; border: 1px solid #f0f0f0; }
         
-        /* 텍스트 클릭 시 펼쳐지게 하는 영역 */
         .post-content-area { flex: 1; display: flex; flex-direction: column; cursor: pointer; }
         .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .post-category { font-size: 0.75rem; font-weight: 700; color: var(--point-color); }
@@ -136,10 +150,11 @@
             </form>
         </div>
         
-        <div class="local-search">
-            <span>⚲</span>
-            <input type="text" id="localSearchInput" placeholder="내 기록 안에서 검색 (입력 후 엔터)">
-        </div>
+        <form class="local-search" onsubmit="event.preventDefault(); executeSearch();">
+            <span class="icon-left">⚲</span>
+            <input type="search" id="localSearchInput" placeholder="내 기록 안에서 검색...">
+            <button type="submit" class="local-search-btn">🔍</button>
+        </form>
     </div>
 
     <nav>
@@ -184,13 +199,18 @@
         let selectedPostImg = "";
         let editIndex = -1;
 
-        // 💡 검색창 엔터키 이벤트 리스너 추가
-        document.getElementById('localSearchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); // 기본 폼 제출 방지
-                renderPosts();      // 엔터키를 칠 때 검색 실행
-            }
-        });
+        // 💡 엔터키 또는 돋보기 버튼을 눌렀을 때 실행 (자동 스크롤 포함)
+        function executeSearch() {
+            renderPosts();
+            
+            // 스마트폰 환경에서 검색 결과(게시판)로 부드럽게 화면 이동
+            setTimeout(() => {
+                const board = document.getElementById('board');
+                if(board) {
+                    board.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
 
         function autoResize(textarea) {
             textarea.style.height = 'auto';
@@ -227,6 +247,8 @@
             currentFilter = cat;
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             document.getElementById(`menu-${cat}`).classList.add('active');
+            
+            document.getElementById('localSearchInput').value = ''; // 탭 전환 시 검색어 비우기
             renderPosts();
         }
 
@@ -261,7 +283,7 @@
         }
 
         function deletePost(event, index) {
-            event.stopPropagation(); // 카드 펼치기 방지
+            event.stopPropagation(); // 카드 펼치기 이벤트 막기
             if(confirm("기록을 삭제하시겠습니까?")) {
                 const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
                 posts.splice(index, 1);
@@ -271,7 +293,7 @@
         }
 
         function editPost(event, index) {
-            event.stopPropagation(); // 카드 펼치기 방지
+            event.stopPropagation(); // 카드 펼치기 이벤트 막기
             const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
             const p = posts[index];
             document.getElementById('postTitle').value = p.title;
@@ -296,7 +318,6 @@
             window.scrollTo({top: 300, behavior: 'smooth'});
         }
 
-        // 게시글 펼치기/접기 함수
         function toggleText(element) {
             const textEl = element.querySelector('.post-text');
             const hintEl = element.querySelector('.expand-hint');
@@ -309,25 +330,26 @@
             }
         }
 
-        // 💡 렌더링 시 검색어 필터 포함
+        // 💡 렌더링 + 결과 없음 처리
         function renderPosts() {
-            const board = document.getElementById('board'); board.innerHTML = '';
+            const board = document.getElementById('board'); 
+            board.innerHTML = '';
             const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
             
-            // 검색어 가져오기
             const searchInput = document.getElementById('localSearchInput');
-            const searchQuery = searchInput ? searchInput.value.toLowerCase() : '';
+            const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            let matchCount = 0; // 결과 수 세기
             
             posts.forEach((p, index) => {
-                // 1차 필터: 카테고리
                 if(currentFilter !== '전체' && p.category !== currentFilter) return;
                 
-                // 2차 필터: 검색어 일치 확인
                 if(searchQuery) {
                     const titleMatch = p.title.toLowerCase().includes(searchQuery);
                     const contentMatch = p.content.toLowerCase().includes(searchQuery);
                     if(!titleMatch && !contentMatch) return;
                 }
+                
+                matchCount++;
                 
                 const card = document.createElement('div');
                 card.className = 'post-card';
@@ -348,6 +370,11 @@
                 `;
                 board.appendChild(card);
             });
+
+            // 💡 검색 결과가 0개일 때 친절한 안내 메시지 띄우기
+            if (searchQuery && matchCount === 0) {
+                board.innerHTML = `<div class="no-results">"${searchQuery}"에 대한 지식 기록을 찾을 수 없습니다.</div>`;
+            }
         }
         
         const savedHero = localStorage.getItem('heroImg');
