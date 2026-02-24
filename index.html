@@ -32,7 +32,7 @@
             backdrop-filter: blur(4px); transition: 0.2s;
         }
         
-        /* 검색 영역 (구글 + 내 DB) */
+        /* 검색 영역 */
         .search-area { 
             width: 92%; max-width: 600px; margin: -25px auto 15px; position: relative; z-index: 10; 
             display: flex; flex-direction: column; gap: 10px; align-items: center;
@@ -43,7 +43,7 @@
         }
         .google-search input { flex: 1; border: none; outline: none; font-size: 0.95rem; color: var(--text-main); background: transparent; }
         
-        /* 💡 수정된 내 DB 검색창 (돋보기 버튼 추가) */
+        /* 내 DB 검색창 */
         .local-search { 
             width: 75%; max-width: 450px; display: flex; align-items: center; 
             background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(195, 104, 57, 0.3); 
@@ -54,7 +54,6 @@
         .local-search input::placeholder { color: #aaa; }
         .local-search .icon-left { color: var(--point-color); margin-right: 8px; font-size: 1rem; }
         
-        /* 💡 돋보기 버튼 스타일 */
         .local-search-btn {
             background: none; border: none; cursor: pointer; font-size: 1.1rem;
             margin-left: 5px; padding: 0; transition: transform 0.2s;
@@ -105,7 +104,6 @@
         /* 게시판 리스트 */
         #board { scroll-margin-top: 20px; }
         
-        /* 💡 검색 결과 없음 메시지 스타일 */
         .no-results {
             text-align: center; padding: 40px 20px; background: var(--card-bg); 
             border: 1px dashed var(--point-color); color: var(--text-sub); 
@@ -130,6 +128,16 @@
         .post-actions { position: absolute; top: 18px; right: 20px; display: flex; gap: 6px; z-index: 5; }
         .action-btn { background: #f4f4f4; border: none; padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; color: #666; font-weight: 500; }
         .action-btn:hover { background: #e0e0e0; color: #333; }
+
+        /* 💡 검색어 형광펜(Highlight) 스타일 추가 */
+        .highlight {
+            background-color: #ffebd2; /* 은은한 살구색 배경 */
+            color: var(--point-hover); /* 진한 오렌지색 글씨 */
+            padding: 0 4px;
+            border-radius: 3px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
     </style>
 </head>
 <body>
@@ -152,7 +160,7 @@
         
         <form class="local-search" onsubmit="event.preventDefault(); executeSearch();">
             <span class="icon-left">⚲</span>
-            <input type="search" id="localSearchInput" placeholder="내 기록 안에서 검색...">
+            <input type="search" id="localSearchInput" placeholder="내 기록 안에서 검색 (입력 후 엔터)">
             <button type="submit" class="local-search-btn">🔍</button>
         </form>
     </div>
@@ -199,11 +207,10 @@
         let selectedPostImg = "";
         let editIndex = -1;
 
-        // 💡 엔터키 또는 돋보기 버튼을 눌렀을 때 실행 (자동 스크롤 포함)
+        // 검색 실행 함수 (자동 스크롤)
         function executeSearch() {
             renderPosts();
             
-            // 스마트폰 환경에서 검색 결과(게시판)로 부드럽게 화면 이동
             setTimeout(() => {
                 const board = document.getElementById('board');
                 if(board) {
@@ -248,7 +255,7 @@
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             document.getElementById(`menu-${cat}`).classList.add('active');
             
-            document.getElementById('localSearchInput').value = ''; // 탭 전환 시 검색어 비우기
+            document.getElementById('localSearchInput').value = ''; 
             renderPosts();
         }
 
@@ -283,7 +290,7 @@
         }
 
         function deletePost(event, index) {
-            event.stopPropagation(); // 카드 펼치기 이벤트 막기
+            event.stopPropagation(); 
             if(confirm("기록을 삭제하시겠습니까?")) {
                 const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
                 posts.splice(index, 1);
@@ -293,7 +300,7 @@
         }
 
         function editPost(event, index) {
-            event.stopPropagation(); // 카드 펼치기 이벤트 막기
+            event.stopPropagation(); 
             const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
             const p = posts[index];
             document.getElementById('postTitle').value = p.title;
@@ -330,7 +337,14 @@
             }
         }
 
-        // 💡 렌더링 + 결과 없음 처리
+        // 💡 텍스트에 형광펜을 칠해주는 함수
+        function highlightKeyword(text, keyword) {
+            if (!keyword) return text;
+            const regex = new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        // 렌더링 + 결과 없음 처리 + 하이라이트
         function renderPosts() {
             const board = document.getElementById('board'); 
             board.innerHTML = '';
@@ -338,7 +352,7 @@
             
             const searchInput = document.getElementById('localSearchInput');
             const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
-            let matchCount = 0; // 결과 수 세기
+            let matchCount = 0; 
             
             posts.forEach((p, index) => {
                 if(currentFilter !== '전체' && p.category !== currentFilter) return;
@@ -351,6 +365,10 @@
                 
                 matchCount++;
                 
+                // 💡 제목과 내용에 하이라이트 함수 적용
+                const displayTitle = highlightKeyword(p.title, searchQuery);
+                const displayContent = highlightKeyword(p.content, searchQuery);
+                
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.innerHTML = `
@@ -362,8 +380,8 @@
                     
                     <div class="post-content-area" onclick="toggleText(this)">
                         <div class="post-header"><span class="post-category">${p.category}</span></div>
-                        <div class="post-title">${p.title}</div>
-                        <div class="post-text">${p.content}</div>
+                        <div class="post-title">${displayTitle}</div>
+                        <div class="post-text">${displayContent}</div>
                         <div class="expand-hint">자세히 보기 ▾</div>
                         <div class="post-date">${p.date}</div>
                     </div>
@@ -371,7 +389,6 @@
                 board.appendChild(card);
             });
 
-            // 💡 검색 결과가 0개일 때 친절한 안내 메시지 띄우기
             if (searchQuery && matchCount === 0) {
                 board.innerHTML = `<div class="no-results">"${searchQuery}"에 대한 지식 기록을 찾을 수 없습니다.</div>`;
             }
