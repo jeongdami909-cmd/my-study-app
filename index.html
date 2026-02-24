@@ -126,7 +126,6 @@
             max-height: 280px;
         }
 
-        /* 💡 뷰어 변수를 통해 여백(Padding)이 동적으로 조절됨 */
         .post-content-area { 
             padding: var(--post-padding-y) var(--post-padding-x); 
             display: flex; flex-direction: column; cursor: pointer; 
@@ -144,14 +143,12 @@
         }
         .tts-btn:hover { background: var(--point-color); color: white; }
 
-        /* 💡 뷰어 변수를 통해 제목 크기도 비율에 맞게 동적 조절 */
         .post-title { 
             font-size: calc(var(--post-font-size) + 0.35rem); 
             font-weight: 700; margin-bottom: 12px; color: var(--text-main); 
             line-height: 1.4; word-break: keep-all; 
         }
         
-        /* 💡 뷰어 변수를 통해 본문 글자 크기와 줄 간격이 조절됨 */
         .post-text { 
             line-height: var(--post-line-height); 
             font-size: var(--post-font-size); 
@@ -170,7 +167,7 @@
 
         .highlight { background-color: #ffebd2; color: var(--point-hover); padding: 0 4px; border-radius: 3px; font-weight: bold; transition: 0.3s; }
 
-        /* 💡 뷰어 설정 플로팅 버튼 및 모달 스타일 */
+        /* 💡 플로팅 뷰어 버튼 */
         .fab-viewer {
             position: fixed; bottom: 30px; right: 30px; width: 55px; height: 55px;
             background: var(--card-bg); color: var(--text-main); border: 1px solid #ddd;
@@ -180,15 +177,27 @@
         }
         .fab-viewer:hover { transform: scale(1.05); border-color: var(--point-color); color: var(--point-color); }
 
+        /* 💡 뷰어 설정 모달창 (음성 설정 포함) */
         .viewer-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
         .viewer-modal-overlay.open { display: flex; }
-        .viewer-modal-content { background: white; width: 100%; max-width: 400px; padding: 35px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); position: relative; }
+        
+        .viewer-modal-content { 
+            background: white; width: 100%; max-width: 400px; padding: 35px; 
+            border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
+            position: relative; max-height: 90vh; overflow-y: auto;
+        }
         .v-close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #aaa; background: none; border: none; }
         
         .setting-group { margin-bottom: 25px; }
         .setting-group label { display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 600; color: #444; margin-bottom: 12px; }
-        /* 슬라이더 바 스타일 */
         .setting-group input[type="range"] { width: 100%; accent-color: var(--point-color); cursor: pointer; }
+        
+        /* 💡 테마에 맞춘 Select 디자인 */
+        .setting-group select { 
+            width: 100%; padding: 10px; border-radius: 8px; 
+            border: 1px solid #ddd; font-family: inherit; font-size: 0.9rem; outline: none; background: #fafafa;
+        }
+        .settings-divider { border-top: 1px dashed #ddd; margin: 25px 0; }
     </style>
 </head>
 <body>
@@ -259,43 +268,95 @@
             <h3 style="margin-top:0; margin-bottom: 25px; font-size:1.3rem; color: var(--point-color);">뷰어 설정</h3>
             
             <div class="setting-group">
-                <label><span>글자 크기</span> <span id="v-val-fontSize"></span></label>
+                <label><span>글자 크기</span></label>
                 <input type="range" id="v-fontSize" min="0.8" max="1.6" step="0.05" oninput="updateViewerSettings()">
             </div>
             <div class="setting-group">
-                <label><span>문단 간격</span> <span id="v-val-lineHeight"></span></label>
+                <label><span>문단 간격</span></label>
                 <input type="range" id="v-lineHeight" min="1.3" max="2.5" step="0.1" oninput="updateViewerSettings()">
             </div>
             <div class="setting-group">
-                <label><span>좌우 여백</span> <span id="v-val-paddingX"></span></label>
+                <label><span>좌우 여백</span></label>
                 <input type="range" id="v-paddingX" min="10" max="45" step="1" oninput="updateViewerSettings()">
             </div>
             <div class="setting-group">
-                <label><span>상하 여백</span> <span id="v-val-paddingY"></span></label>
+                <label><span>상하 여백</span></label>
                 <input type="range" id="v-paddingY" min="15" max="50" step="1" oninput="updateViewerSettings()">
             </div>
             
+            <div class="settings-divider"></div>
+            <h3 style="margin-top:0; margin-bottom: 20px; font-size:1.1rem; color: var(--point-color);">음성(TTS) 디테일 설정</h3>
+
+            <div class="setting-group">
+                <label><span>목소리 종류 (기기 내장)</span></label>
+                <select id="v-ttsVoice" onchange="updateViewerSettings()">
+                    <option value="">기본 목소리 로딩 중...</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label><span>읽기 속도</span> <span id="val-ttsRate" style="color:var(--point-color);"></span></label>
+                <input type="range" id="v-ttsRate" min="0.5" max="2.0" step="0.1" oninput="updateViewerSettings()">
+            </div>
+            <div class="setting-group">
+                <label><span>목소리 톤 (낮게 ↔ 높게)</span> <span id="val-ttsPitch" style="color:var(--point-color);"></span></label>
+                <input type="range" id="v-ttsPitch" min="0.5" max="1.5" step="0.1" oninput="updateViewerSettings()">
+            </div>
+
             <button class="action-btn" style="width:100%; margin-top:10px; padding:12px; font-size:1rem; background:#f4f4f4;" onclick="resetViewerSettings()">기본값으로 초기화</button>
         </div>
     </div>
 
     <script>
-        // 💡 뷰어 설정 관리 로직
-        const defaultViewer = { fontSize: 1.05, lineHeight: 1.75, paddingX: 25, paddingY: 25 };
-        let viewerSettings = JSON.parse(localStorage.getItem('vaultViewerSettings')) || defaultViewer;
+        // --- 💡 뷰어 & 음성 설정 관리 로직 ---
+        const defaultViewer = { fontSize: 1.05, lineHeight: 1.75, paddingX: 25, paddingY: 25, ttsRate: 1.0, ttsPitch: 1.0, ttsVoice: '' };
+        let viewerSettings = JSON.parse(localStorage.getItem('vaultViewerSettingsV2')) || defaultViewer;
+
+        // 사용 가능한 목소리 목록 불러오기
+        let availableVoices = [];
+        function populateVoices() {
+            // 💡 엉뚱한 외국어 방지: 정확히 한국어만 필터링
+            availableVoices = window.speechSynthesis.getVoices().filter(v => v.lang === 'ko-KR' || v.lang === 'ko_KR' || v.lang === 'ko');
+            const voiceSelect = document.getElementById('v-ttsVoice');
+            
+            if (availableVoices.length === 0) {
+                voiceSelect.innerHTML = '<option value="">기기 기본 한국어</option>';
+                return;
+            }
+
+            voiceSelect.innerHTML = '';
+            availableVoices.forEach((voice, index) => {
+                const option = document.createElement('option');
+                option.value = voice.voiceURI;
+                option.textContent = voice.name + (voice.localService ? ' (내장)' : ' (온라인)');
+                
+                if (viewerSettings.ttsVoice === voice.voiceURI || (viewerSettings.ttsVoice === '' && index === 0)) {
+                    option.selected = true;
+                }
+                voiceSelect.appendChild(option);
+            });
+        }
+        window.speechSynthesis.onvoiceschanged = populateVoices;
+        setTimeout(populateVoices, 500);
 
         function applyViewerSettings() {
-            // CSS 변수를 실시간으로 업데이트하여 전체 카드의 모양을 바꿉니다.
             document.documentElement.style.setProperty('--post-font-size', viewerSettings.fontSize + 'rem');
             document.documentElement.style.setProperty('--post-line-height', viewerSettings.lineHeight);
             document.documentElement.style.setProperty('--post-padding-x', viewerSettings.paddingX + 'px');
             document.documentElement.style.setProperty('--post-padding-y', viewerSettings.paddingY + 'px');
             
-            // 모달 안의 슬라이더 값 동기화
             document.getElementById('v-fontSize').value = viewerSettings.fontSize;
             document.getElementById('v-lineHeight').value = viewerSettings.lineHeight;
             document.getElementById('v-paddingX').value = viewerSettings.paddingX;
             document.getElementById('v-paddingY').value = viewerSettings.paddingY;
+            document.getElementById('v-ttsRate').value = viewerSettings.ttsRate || 1.0;
+            document.getElementById('v-ttsPitch').value = viewerSettings.ttsPitch || 1.0;
+            
+            if(document.getElementById('val-ttsRate')) document.getElementById('val-ttsRate').textContent = (viewerSettings.ttsRate || 1.0) + 'x';
+            if(document.getElementById('val-ttsPitch')) document.getElementById('val-ttsPitch').textContent = (viewerSettings.ttsPitch || 1.0);
+            
+            if(document.getElementById('v-ttsVoice').options.length > 0 && viewerSettings.ttsVoice) {
+                document.getElementById('v-ttsVoice').value = viewerSettings.ttsVoice;
+            }
         }
 
         function updateViewerSettings() {
@@ -303,22 +364,24 @@
                 fontSize: document.getElementById('v-fontSize').value,
                 lineHeight: document.getElementById('v-lineHeight').value,
                 paddingX: document.getElementById('v-paddingX').value,
-                paddingY: document.getElementById('v-paddingY').value
+                paddingY: document.getElementById('v-paddingY').value,
+                ttsRate: document.getElementById('v-ttsRate').value,
+                ttsPitch: document.getElementById('v-ttsPitch').value,
+                ttsVoice: document.getElementById('v-ttsVoice').value
             };
-            localStorage.setItem('vaultViewerSettings', JSON.stringify(viewerSettings));
+            localStorage.setItem('vaultViewerSettingsV2', JSON.stringify(viewerSettings));
             applyViewerSettings();
         }
 
         function resetViewerSettings() {
             viewerSettings = { ...defaultViewer };
-            localStorage.setItem('vaultViewerSettings', JSON.stringify(viewerSettings));
+            localStorage.setItem('vaultViewerSettingsV2', JSON.stringify(viewerSettings));
             applyViewerSettings();
         }
 
         function openViewerModal() { document.getElementById('viewerModal').classList.add('open'); }
         function closeViewerModal() { document.getElementById('viewerModal').classList.remove('open'); }
 
-        // 페이지 진입 시 저장된 뷰어 설정 불러오기
         applyViewerSettings();
 
 
@@ -461,6 +524,7 @@
             return text.replace(regex, '<span class="highlight">$1</span>');
         }
 
+        // 💡 디테일 설정이 적용된 TTS 기능
         function toggleTTS(event, index) {
             event.stopPropagation(); 
             
@@ -479,7 +543,18 @@
             const utterance = new SpeechSynthesisUtterance(textToRead);
             
             utterance.lang = 'ko-KR'; 
-            utterance.rate = 0.95; 
+            
+            // 저장된 속도 및 톤 적용
+            utterance.rate = parseFloat(viewerSettings.ttsRate) || 1.0; 
+            utterance.pitch = parseFloat(viewerSettings.ttsPitch) || 1.0;
+            
+            // 저장된 목소리 적용
+            if (viewerSettings.ttsVoice) {
+                const selectedVoice = availableVoices.find(v => v.voiceURI === viewerSettings.ttsVoice);
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                }
+            }
             
             utterance.onend = function() {
                 currentSpeakingIndex = -1;
