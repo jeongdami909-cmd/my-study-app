@@ -1,310 +1,358 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Knowledge Vault - Premium</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg-color: #f8f9fa; 
-  --text-main: #1a1a1a;
-  --text-muted: #6c757d;
-  --accent-color: #0d3b66; 
-  --border-color: #e9ecef;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Knowledge Vault</title>
+    <style>
+        :root {
+            --bg-color: #f4f2f0;
+            --point-color: #c36839;
+            --point-hover: #a6552c;
+            --text-main: #2b2b2b;
+            --text-sub: #7a7a7a;
+            --card-bg: #ffffff;
+        }
 
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 80px; }
+        body { 
+            background-color: var(--bg-color); font-family: 'Pretendard', -apple-system, sans-serif; 
+            margin: 0; color: var(--text-main); -webkit-font-smoothing: antialiased;
+        }
 
-/* 헤더 */
-.site-header { text-align: center; padding: 60px 20px 30px; background: white; border-bottom: 1px solid var(--border-color); }
-.site-title { font-family:'Playfair Display', serif; font-size: 2.8rem; font-weight:700; color: var(--accent-color); margin-bottom: 10px; letter-spacing: -0.5px; }
-.site-subtitle { font-size: 0.95rem; color: var(--text-muted); font-weight: 300; max-width: 600px; margin: 0 auto 25px; line-height: 1.6; }
-.btn-new { background: var(--accent-color); color: white; border: none; padding: 10px 28px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.5px; transition: 0.3s; }
-.btn-new:hover { background: #0a2c4c; box-shadow: 0 4px 12px rgba(13, 59, 102, 0.2); }
+        /* 상단 커버 */
+        .top-hero {
+            width: 100%; height: 220px; background-color: #ddd;
+            background-size: cover; background-position: center;
+            display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        .hero-overlay {
+            position: absolute; bottom: 12px; right: 15px;
+            background: rgba(0,0,0,0.6); padding: 6px 12px; border-radius: 6px;
+            color: white; font-size: 0.75rem; cursor: pointer; letter-spacing: 0.5px;
+            backdrop-filter: blur(4px); transition: 0.2s;
+        }
+        
+        /* 💡 수정된 검색 영역 (구글 + 내 DB) */
+        .search-area { 
+            width: 92%; max-width: 600px; margin: -25px auto 15px; position: relative; z-index: 10; 
+            display: flex; flex-direction: column; gap: 10px; align-items: center;
+        }
+        .google-search { 
+            width: 100%; display: flex; background: var(--card-bg); border-radius: 12px; 
+            padding: 8px 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border: 1px solid #ebebeb;
+        }
+        .google-search input { flex: 1; border: none; outline: none; font-size: 0.95rem; color: var(--text-main); background: transparent; }
+        
+        /* 새로 추가된 내 DB 검색창 */
+        .local-search { 
+            width: 70%; max-width: 450px; display: flex; align-items: center; 
+            background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(195, 104, 57, 0.3); 
+            padding: 8px 18px; border-radius: 20px; backdrop-filter: blur(5px); transition: 0.3s; 
+        }
+        .local-search:focus-within { border-color: var(--point-color); box-shadow: 0 4px 12px rgba(195, 104, 57, 0.1); }
+        .local-search input { flex: 1; border: none; outline: none; background: transparent; font-family: inherit; font-size: 0.85rem; color: var(--text-main); }
+        .local-search input::placeholder { color: #aaa; }
+        .local-search span { color: var(--point-color); margin-right: 8px; font-size: 1.1rem; }
 
-/* 검색 컨테이너 */
-.search-container { width: 92%; max-width: 600px; margin: -25px auto 25px; position: relative; z-index: 10; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        /* 상단 메뉴 */
+        nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 10px 15px 20px; max-width: 600px; margin: 0 auto; }
+        nav button { 
+            background: var(--card-bg); border: 1px solid #e0e0e0; padding: 8px 16px; 
+            border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; 
+            color: var(--text-sub); transition: 0.2s; 
+        }
+        nav button.active { background: var(--point-color); color: white; border-color: var(--point-color); }
 
-/* 1. 구글 검색창 */
-.google-search { width: 100%; display: flex; background: white; border-radius: 12px; padding: 10px 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border: 1px solid var(--border-color); }
-.google-search input { flex: 1; border: none; outline: none; font-size: 0.95rem; color: var(--text-main); background: transparent; }
+        .container { width: 92%; max-width: 650px; margin: 0 auto; padding-bottom: 60px; }
 
-/* 2. 내 DB 검색창 (엔터키 작동) */
-.local-search { width: 70%; max-width: 450px; display: flex; align-items: center; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(13, 59, 102, 0.2); padding: 8px 18px; border-radius: 20px; backdrop-filter: blur(5px); transition: 0.3s; }
-.local-search:focus-within { border-color: var(--accent-color); box-shadow: 0 4px 12px rgba(13, 59, 102, 0.1); }
-.local-search input { flex: 1; border: none; outline: none; background: transparent; font-family: 'Noto Sans KR', sans-serif; font-size: 0.85rem; color: var(--text-main); }
-.local-search input::placeholder { color: #aaa; }
-.local-search span { color: var(--accent-color); margin-right: 8px; font-size: 1.1rem; }
+        /* 입력란 카드 */
+        .editor-card { 
+            background: var(--card-bg); border-radius: 16px; padding: 25px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 35px; border: 1px solid #eaeaea;
+        }
+        .editor-header { margin-top: 0; margin-bottom: 20px; font-size: 1.1rem; color: var(--text-main); font-weight: 700; }
+        
+        .input-row { display: flex; gap: 10px; margin-bottom: 12px; width: 100%; box-sizing: border-box; }
+        .input-row input { flex: 7; margin-bottom: 0; min-width: 0; }
+        .input-row select { flex: 3; margin-bottom: 0; min-width: 0; padding-left: 10px; padding-right: 10px; cursor: pointer; background-color: #fcfcfc; }
+        
+        .editor-card input, .editor-card select { 
+            border: 1px solid #e2e2e2; border-radius: 8px; padding: 14px; 
+            box-sizing: border-box; font-size: 0.95rem; outline: none; transition: 0.2s;
+        }
+        
+        .editor-card textarea {
+            width: 100%; border: 1px solid #e2e2e2; border-radius: 8px; padding: 15px; 
+            box-sizing: border-box; font-size: 1rem; outline: none; transition: 0.2s;
+            min-height: 150px; resize: none; overflow-y: hidden; line-height: 1.6;
+            font-family: inherit;
+        }
+        
+        .editor-card input:focus, .editor-card textarea:focus, .editor-card select:focus { border-color: var(--point-color); background: #fff; }
+        
+        /* 파일 박스 */
+        .file-box { border: 1px dashed #d0d0d0; padding: 16px; text-align: center; border-radius: 8px; margin-bottom: 12px; cursor: pointer; color: var(--text-sub); font-size: 0.9rem; background: #fafafa; transition: 0.2s; }
+        .file-box:hover { border-color: var(--point-color); color: var(--point-color); background: #fffaf7; }
 
-/* 오리지널 메뉴판 */
-.menu-nav { display: flex; justify-content: center; gap: 20px; padding: 20px; background: white; position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.02); overflow-x: auto; white-space: nowrap; }
-.menu-btn { background: none; border: none; font-size: 0.9rem; font-weight: 500; color: var(--text-muted); cursor: pointer; position: relative; padding: 5px 0; transition: color 0.3s; letter-spacing: 0.5px; }
-.menu-btn::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; background-color: var(--accent-color); transition: all 0.3s ease; transform: translateX(-50%); }
-.menu-btn:hover { color: var(--text-main); }
-.menu-btn.active { color: var(--accent-color); font-weight: 700; }
-.menu-btn.active::after { width: 100%; }
+        .main-btn { width: 100%; padding: 16px; border: none; border-radius: 8px; background: var(--point-color); color: white; font-weight: 600; cursor: pointer; font-size: 1.05rem; }
 
-/* 카드 그리드 */
-.container { max-width: 1100px; margin: 40px auto 0; padding: 0 20px; }
-.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        /* 게시판 리스트 */
+        .post-card { background: var(--card-bg); border-radius: 16px; margin-bottom: 20px; padding: 20px; display: flex; gap: 20px; position: relative; border: 1px solid #eaeaea; }
+        .post-thumb { width: 110px; height: 110px; border-radius: 10px; object-fit: cover; flex-shrink: 0; cursor: pointer; border: 1px solid #f0f0f0; }
+        
+        /* 텍스트 클릭 시 펼쳐지게 하는 영역 */
+        .post-content-area { flex: 1; display: flex; flex-direction: column; cursor: pointer; }
+        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .post-category { font-size: 0.75rem; font-weight: 700; color: var(--point-color); }
+        .post-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: var(--text-main); line-height: 1.3; }
+        
+        .post-text { line-height: 1.6; font-size: 0.95rem; color: #555; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; flex-grow: 1; transition: all 0.3s ease; }
+        .post-text.expanded { display: block; -webkit-line-clamp: unset; }
+        
+        .expand-hint { font-size: 0.8rem; color: var(--point-color); font-weight: bold; margin-top: 8px; }
+        .post-date { font-size: 0.75rem; color: #aaa; margin-top: 12px; }
 
-.info-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.04); cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
-.info-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.08); }
-.card-img-wrap { width: 100%; height: 180px; background: #f4f4f4; overflow: hidden; }
-.card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-.info-card:hover .card-img { transform: scale(1.05); }
-.card-body { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
-.card-cat { font-size: 0.75rem; font-weight: 700; color: var(--accent-color); margin-bottom: 10px; letter-spacing: 1px; }
-.card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; line-height: 1.4; color: var(--text-main); word-break: keep-all; }
-.card-preview { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 20px; }
-.card-footer { margin-top: auto; font-size: 0.8rem; color: #adb5bd; border-top: 1px solid var(--border-color); padding-top: 15px; display: flex; justify-content: space-between; }
-
-/* 모달 공통 */
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26, 26, 26, 0.8); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
-.modal-overlay.open { display: flex; }
-.modal-content { background: white; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; padding: 50px; border-radius: 12px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
-.close-btn { position: absolute; top: 25px; right: 30px; font-size: 2rem; cursor: pointer; color: #adb5bd; background: none; border: none; font-weight: 300; transition: color 0.2s; }
-.close-btn:hover { color: var(--text-main); }
-
-/* 상세 보기 팝업 */
-.detail-cat { font-size: 0.85rem; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; margin-bottom: 15px; display: block; }
-.detail-title { font-family:'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; margin-bottom: 30px; line-height: 1.3; color: var(--text-main); }
-.detail-img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; margin-bottom: 30px; }
-.detail-text { font-size: 1.05rem; line-height: 1.8; color: #333; white-space: pre-wrap; font-weight: 300; }
-.detail-actions { margin-top: 40px; display: flex; gap: 15px; border-top: 1px solid var(--border-color); padding-top: 25px; }
-.action-btn { background: white; border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; color: var(--text-main); font-weight: 500; transition: 0.2s; }
-.action-btn:hover { background: #f8f9fa; border-color: #ced4da; }
-.action-btn.delete { color: #dc3545; border-color: #f8d7da; background: #fff5f5; }
-.action-btn.delete:hover { background: #dc3545; color: white; }
-
-/* 폼 모달 */
-.form-group { margin-bottom: 25px; }
-.form-group label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 1rem; outline: none; background: #fff; transition: border-color 0.2s; }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(13, 59, 102, 0.1); }
-.form-group textarea { min-height: 200px; resize: vertical; line-height: 1.6; }
-.save-btn { width: 100%; background: var(--accent-color); color: white; border: none; padding: 16px; border-radius: 6px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
-.save-btn:hover { background: #0a2c4c; }
-</style>
+        /* 수정/삭제 버튼 */
+        .post-actions { position: absolute; top: 18px; right: 20px; display: flex; gap: 6px; z-index: 5; }
+        .action-btn { background: #f4f4f4; border: none; padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; color: #666; font-weight: 500; }
+        .action-btn:hover { background: #e0e0e0; color: #333; }
+    </style>
 </head>
 <body>
 
-<header class="site-header">
-  <h1 class="site-title">KNOWLEDGE VAULT</h1>
-  <p class="site-subtitle">나만의 지식과 통찰을 보관하는 프라이빗 데이터베이스입니다.</p>
-  <button class="btn-new" onclick="openForm()">+ 새 지식 기록하기</button>
-</header>
-
-<div class="search-container">
-  <div class="google-search">
-    <form action="https://www.google.com/search" method="GET" target="_blank" style="width:100%; display:flex; align-items:center;">
-      <span style="color:#aaa; margin-right:8px; font-size:1.1rem;">🔍</span>
-      <input type="text" name="q" placeholder="구글 지식 검색...">
-    </form>
-  </div>
-  
-  <div class="local-search">
-    <span>⚲</span>
-    <input type="text" id="localSearchInput" placeholder="내 기록 안에서 검색 (입력 후 엔터)">
-  </div>
-</div>
-
-<nav class="menu-nav">
-  <button class="menu-btn active" onclick="setFilter('전체', this)">All</button>
-  <button class="menu-btn" onclick="setFilter('의학', this)">의학</button>
-  <button class="menu-btn" onclick="setFilter('시사', this)">시사</button>
-  <button class="menu-btn" onclick="setFilter('과학', this)">과학</button>
-  <button class="menu-btn" onclick="setFilter('인물', this)">인물</button>
-  <button class="menu-btn" onclick="setFilter('New Fields', this)">New Fields</button>
-</nav>
-
-<main class="container">
-  <div class="grid-container" id="gridContainer">
+    <div class="top-hero" id="topHero" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80');">
+        <label class="hero-overlay">
+            📷 커버 변경
+            <input type="file" id="heroInput" hidden accept="image/*">
+        </label>
+        <h1 style="color:white; font-size:2rem; font-weight:300; letter-spacing:8px; text-shadow: 0 4px 15px rgba(0,0,0,0.4);">VAULT</h1>
     </div>
-</main>
 
-<div class="modal-overlay" id="detailModal">
-  <div class="modal-content">
-    <button class="close-btn" onclick="closeModal('detailModal')">×</button>
-    <div id="detailContent"></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="formModal">
-  <div class="modal-content">
-    <button class="close-btn" onclick="closeModal('formModal')">×</button>
-    <h2 id="formTitle" style="font-family:'Playfair Display', serif; margin-bottom: 30px; color: var(--accent-color);">Add Knowledge</h2>
-    
-    <div class="form-group">
-      <label>제목</label>
-      <input type="text" id="f-title" placeholder="기록의 핵심 제목을 적어주세요">
+    <div class="search-area">
+        <div class="google-search">
+            <form action="https://www.google.com/search" method="GET" target="_blank" style="width:100%; display:flex; align-items:center;">
+                <span style="color:#aaa; margin-right:8px; font-size:1.1rem;">🔍</span>
+                <input type="text" name="q" placeholder="구글 지식 검색...">
+            </form>
+        </div>
+        
+        <div class="local-search">
+            <span>⚲</span>
+            <input type="text" id="localSearchInput" placeholder="내 기록 안에서 검색 (입력 후 엔터)">
+        </div>
     </div>
-    <div class="form-group">
-      <label>카테고리</label>
-      <select id="f-category">
-        <option value="의학">의학</option>
-        <option value="시사">시사</option>
-        <option value="과학">과학</option>
-        <option value="인물">인물</option>
-        <option value="New Fields">New Fields</option>
-      </select>
+
+    <nav>
+        <button onclick="setFilter('의학')" id="menu-의학">의학</button>
+        <button onclick="setFilter('시사')" id="menu-시사">시사</button>
+        <button onclick="setFilter('과학')" id="menu-과학">과학</button>
+        <button onclick="setFilter('인물')" id="menu-인물">인물</button>
+        <button onclick="setFilter('New Fields')" id="menu-New Fields">New Fields</button>
+        <button onclick="setFilter('전체')" id="menu-전체" class="active">전체</button>
+    </nav>
+
+    <div class="container">
+        <div class="editor-card">
+            <div class="editor-header">지식 기록하기</div>
+            
+            <div class="input-row">
+                <input type="text" id="postTitle" placeholder="제목">
+                <select id="postCategory">
+                    <option value="의학">의학</option>
+                    <option value="시사">시사</option>
+                    <option value="과학">과학</option>
+                    <option value="인물">인물</option>
+                    <option value="New Fields">New Fields</option>
+                </select>
+            </div>
+
+            <div class="file-box" onclick="document.getElementById('postFileInput').click()" id="fileBoxText">
+                + 관련 사진 첨부
+            </div>
+            <input type="file" id="postFileInput" hidden accept="image/*">
+            
+            <textarea id="postContent" placeholder="여기에 내용을 기록하세요. 긴 글을 쓰면 칸이 아래로 자동으로 늘어납니다..." oninput="autoResize(this)"></textarea>
+            
+            <button class="main-btn" onclick="savePost()">저장하기</button>
+        </div>
+
+        <div id="board"></div>
     </div>
-    <div class="form-group">
-      <label>관련 이미지 URL (선택)</label>
-      <input type="text" id="f-img" placeholder="http://...">
-    </div>
-    <div class="form-group">
-      <label>상세 내용 (원문 및 감상)</label>
-      <textarea id="f-content" placeholder="텍스트를 자유롭게 입력하세요..."></textarea>
-    </div>
-    <button class="save-btn" onclick="handleSave()">기록 저장하기</button>
-  </div>
-</div>
 
-<script>
-let posts = JSON.parse(localStorage.getItem('my_study_vault_data') || '[]');
-let currentEditId = null;
-let currentFilter = '전체';
+    <script>
+        let currentFilter = '전체'; 
+        let selectedPostImg = "";
+        let editIndex = -1;
 
-// 💡 엔터키 검색 이벤트 리스너 추가
-document.getElementById('localSearchInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault(); // 기본 폼 제출 방지
-        renderGrid(); // 엔터 칠 때만 검색 실행
-    }
-});
+        // 💡 검색창 엔터키 이벤트 리스너 추가
+        document.getElementById('localSearchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // 기본 폼 제출 방지
+                renderPosts();      // 엔터키를 칠 때 검색 실행
+            }
+        });
 
-function renderGrid() {
-    const grid = document.getElementById('gridContainer');
-    grid.innerHTML = '';
-    
-    // 사용자가 입력한 검색어 가져오기
-    const searchQuery = document.getElementById('localSearchInput').value.toLowerCase();
-    
-    posts.forEach(p => {
-        // 1차: 카테고리 필터
-        if (currentFilter !== '전체' && p.category !== currentFilter) return;
-
-        // 2차: 검색어 필터 (제목 또는 내용에 포함)
-        if (searchQuery) {
-            const titleMatch = p.title.toLowerCase().includes(searchQuery);
-            const contentMatch = p.content.toLowerCase().includes(searchQuery);
-            if (!titleMatch && !contentMatch) return; // 포함되지 않으면 그리지 않음
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
         }
 
-        const imgHtml = p.img ? `<div class="card-img-wrap"><img src="${p.img}" class="card-img" alt="cover"></div>` : '';
-        
-        grid.innerHTML += `
-            <div class="info-card" onclick="openDetail(${p.id})">
-                ${imgHtml}
-                <div class="card-body">
-                    <span class="card-cat">${p.category}</span>
-                    <h3 class="card-title">${p.title}</h3>
-                    <p class="card-preview">${p.content}</p>
-                    <div class="card-footer">
-                        <span>Read More ➔</span>
-                        <span>${p.date}</span>
+        document.getElementById('heroInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    document.getElementById('topHero').style.backgroundImage = `url(${ev.target.result})`;
+                    localStorage.setItem('heroImg', ev.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('postFileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => { 
+                    selectedPostImg = ev.target.result; 
+                    document.getElementById('fileBoxText').innerHTML = "✔️ 사진 첨부됨 (클릭 시 변경)";
+                    document.getElementById('fileBoxText').style.borderColor = "var(--point-color)";
+                    document.getElementById('fileBoxText').style.color = "var(--point-color)";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function setFilter(cat) {
+            currentFilter = cat;
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById(`menu-${cat}`).classList.add('active');
+            renderPosts();
+        }
+
+        function savePost() {
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            const category = document.getElementById('postCategory').value; 
+            
+            if(!title || !content) { alert("제목과 내용을 입력해주세요."); return; }
+
+            const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
+            const data = { category: category, title, content, img: selectedPostImg, date: new Date().toLocaleDateString() };
+
+            if(editIndex > -1) { posts[editIndex] = data; editIndex = -1; }
+            else { posts.unshift(data); }
+
+            localStorage.setItem('vaultFinalV7', JSON.stringify(posts));
+            resetForm();
+            renderPosts();
+        }
+
+        function resetForm() {
+            document.getElementById('postTitle').value = '';
+            const contentBox = document.getElementById('postContent');
+            contentBox.value = '';
+            contentBox.style.height = '150px'; 
+            document.getElementById('postCategory').value = '의학'; 
+            selectedPostImg = "";
+            document.getElementById('fileBoxText').innerHTML = "+ 관련 사진 첨부";
+            document.getElementById('fileBoxText').style.borderColor = "#d0d0d0";
+            document.getElementById('fileBoxText').style.color = "var(--text-sub)";
+        }
+
+        function deletePost(event, index) {
+            event.stopPropagation(); // 카드 펼치기 방지
+            if(confirm("기록을 삭제하시겠습니까?")) {
+                const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
+                posts.splice(index, 1);
+                localStorage.setItem('vaultFinalV7', JSON.stringify(posts));
+                renderPosts();
+            }
+        }
+
+        function editPost(event, index) {
+            event.stopPropagation(); // 카드 펼치기 방지
+            const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
+            const p = posts[index];
+            document.getElementById('postTitle').value = p.title;
+            document.getElementById('postCategory').value = p.category; 
+            
+            const contentBox = document.getElementById('postContent');
+            contentBox.value = p.content;
+            autoResize(contentBox); 
+            
+            selectedPostImg = p.img || "";
+            
+            if(p.img) {
+                document.getElementById('fileBoxText').innerHTML = "✔️ 기존 사진 유지 (클릭 시 변경)";
+                document.getElementById('fileBoxText').style.color = "var(--point-color)";
+                document.getElementById('fileBoxText').style.borderColor = "var(--point-color)";
+            } else {
+                document.getElementById('fileBoxText').innerHTML = "+ 관련 사진 첨부";
+                document.getElementById('fileBoxText').style.borderColor = "#d0d0d0";
+                document.getElementById('fileBoxText').style.color = "var(--text-sub)";
+            }
+            editIndex = index;
+            window.scrollTo({top: 300, behavior: 'smooth'});
+        }
+
+        // 게시글 펼치기/접기 함수
+        function toggleText(element) {
+            const textEl = element.querySelector('.post-text');
+            const hintEl = element.querySelector('.expand-hint');
+            textEl.classList.toggle('expanded');
+            
+            if (textEl.classList.contains('expanded')) {
+                hintEl.innerText = '접기 ▴';
+            } else {
+                hintEl.innerText = '자세히 보기 ▾';
+            }
+        }
+
+        // 💡 렌더링 시 검색어 필터 포함
+        function renderPosts() {
+            const board = document.getElementById('board'); board.innerHTML = '';
+            const posts = JSON.parse(localStorage.getItem('vaultFinalV7') || '[]');
+            
+            // 검색어 가져오기
+            const searchInput = document.getElementById('localSearchInput');
+            const searchQuery = searchInput ? searchInput.value.toLowerCase() : '';
+            
+            posts.forEach((p, index) => {
+                // 1차 필터: 카테고리
+                if(currentFilter !== '전체' && p.category !== currentFilter) return;
+                
+                // 2차 필터: 검색어 일치 확인
+                if(searchQuery) {
+                    const titleMatch = p.title.toLowerCase().includes(searchQuery);
+                    const contentMatch = p.content.toLowerCase().includes(searchQuery);
+                    if(!titleMatch && !contentMatch) return;
+                }
+                
+                const card = document.createElement('div');
+                card.className = 'post-card';
+                card.innerHTML = `
+                    <div class="post-actions">
+                        <button class="action-btn" onclick="editPost(event, ${index})">수정</button>
+                        <button class="action-btn" onclick="deletePost(event, ${index})">삭제</button>
                     </div>
-                </div>
-            </div>
-        `;
-    });
-}
-
-function setFilter(cat, btnElement) {
-    currentFilter = cat;
-    document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-    btnElement.classList.add('active');
-    
-    // 탭을 바꿀 때는 검색어를 초기화하고 싶다면 아래 주석을 해제하세요
-    // document.getElementById('localSearchInput').value = '';
-    
-    renderGrid();
-}
-
-function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = 'auto'; }
-
-function openDetail(id) {
-    const p = posts.find(item => item.id === id);
-    if(!p) return;
-    
-    const content = document.getElementById('detailContent');
-    const imgHtml = p.img ? `<img src="${p.img}" class="detail-img">` : '';
-
-    content.innerHTML = `
-        <span class="detail-cat">${p.category}</span>
-        <h2 class="detail-title">${p.title}</h2>
-        ${imgHtml}
-        <div class="detail-text">${p.content}</div>
+                    ${p.img ? `<img src="${p.img}" class="post-thumb" onclick="window.open(this.src)">` : `<div class="post-thumb" style="display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:#ccc;background:#f9f9f9;">NO IMG</div>`}
+                    
+                    <div class="post-content-area" onclick="toggleText(this)">
+                        <div class="post-header"><span class="post-category">${p.category}</span></div>
+                        <div class="post-title">${p.title}</div>
+                        <div class="post-text">${p.content}</div>
+                        <div class="expand-hint">자세히 보기 ▾</div>
+                        <div class="post-date">${p.date}</div>
+                    </div>
+                `;
+                board.appendChild(card);
+            });
+        }
         
-        <div class="detail-actions">
-            <button class="action-btn" onclick="openForm(${p.id})">Edit Insight</button>
-            <button class="action-btn delete" onclick="deletePost(${p.id})">Delete</button>
-        </div>
-    `;
-    
-    openModal('detailModal');
-}
-
-function openForm(id = null) {
-    currentEditId = id;
-    if(id) {
-        closeModal('detailModal');
-        const p = posts.find(item => item.id === id);
-        document.getElementById('f-title').value = p.title;
-        document.getElementById('f-category').value = p.category;
-        document.getElementById('f-img').value = p.img || '';
-        document.getElementById('f-content').value = p.content;
-        document.getElementById('formTitle').innerText = "Edit Knowledge";
-    } else {
-        document.getElementById('f-title').value = '';
-        document.getElementById('f-category').value = '의학';
-        document.getElementById('f-img').value = '';
-        document.getElementById('f-content').value = '';
-        document.getElementById('formTitle').innerText = "Add Knowledge";
-    }
-    openModal('formModal');
-}
-
-function handleSave() {
-    const title = document.getElementById('f-title').value;
-    const category = document.getElementById('f-category').value;
-    const img = document.getElementById('f-img').value;
-    const content = document.getElementById('f-content').value;
-
-    if(!title || !content) return alert("제목과 내용은 필수입니다.");
-
-    const today = new Date();
-    const dateStr = `${today.getFullYear()}. ${String(today.getMonth()+1).padStart(2,'0')}. ${String(today.getDate()).padStart(2,'0')}`;
-
-    const data = { id: currentEditId || Date.now(), category, title, img, content, date: dateStr };
-
-    if(currentEditId) {
-        const idx = posts.findIndex(p => p.id === currentEditId);
-        posts[idx] = data;
-    } else {
-        posts.unshift(data);
-    }
-    
-    localStorage.setItem('my_study_vault_data', JSON.stringify(posts));
-    renderGrid();
-    closeModal('formModal');
-    if(currentEditId) openDetail(currentEditId); 
-}
-
-function deletePost(id) {
-    if(!confirm("이 기록을 삭제하시겠습니까?")) return;
-    posts = posts.filter(p => p.id !== id);
-    localStorage.setItem('my_study_vault_data', JSON.stringify(posts));
-    closeModal('detailModal');
-    renderGrid();
-}
-
-renderGrid();
-</script>
+        const savedHero = localStorage.getItem('heroImg');
+        if(savedHero) document.getElementById('topHero').style.backgroundImage = `url(${savedHero})`;
+        renderPosts();
+    </script>
 </body>
 </html>
